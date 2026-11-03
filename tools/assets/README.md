@@ -24,7 +24,17 @@ python3 tools/assets/level.py 01 --step cost              # фактичні в�
 Методи Meshy: **M** — multi-image (meshy-7.1, види front/side/back), **S** — Smart Topology (meshy-t2.5, вид front34).
 Пілот проганяє обидва (`methods: [M, S]`), кращий записуємо в `use`.
 
-Скриншот з гри без людини (для порівняння з концептом):
+2D з рефів FLUX (бекдроп, монета, ковбой, трава, HUD, стікери → `assets/textures/<рівень>/`):
+```
+python3 tools/assets/prep_2d.py 01
+```
+
+Сцена рівня збирається скриптом (розмітка живе в ньому, `.tscn` — результат):
+```
+godot --headless --path . --script tools/godot/build_level_01.gd
+```
+
+Скриншот з гри без людини (для порівняння з концептом; `throw` — з предметом у польоті, `reload:N` — перезарядка):
 ```
 godot --path . --script tools/godot/screenshot.gd -- shot.png res://scenes/main.tscn 120
 ```

@@ -23,8 +23,8 @@ const HAND_LEFT := "res://assets/models/01/hand_left.glb"
 ## Модель: ствол уздовж −X і трохи вгору → повертаємо стволом на −Z і вирівнюємо.
 const REVOLVER_YAW := -90.0
 const REVOLVER_PITCH := -15.0
-const REVOLVER_SCALE := 1.3
-const REVOLVER_OFFSET := Vector3(0.03, 0.0, 0.12)
+const REVOLVER_SCALE := 1.55
+const REVOLVER_OFFSET := Vector3(0.0, 0.08, 0.14)
 const REVOLVER_MUZZLE := Vector3(-0.295, 0.169, -0.027)
 ## Окреме світло лише для руки: шар 20 у моделей рук і cull_mask світла.
 const HERO_LAYER := 1 << 19
@@ -359,7 +359,7 @@ func _build_left_model() -> void:
 	if not ResourceLoader.exists(HAND_LEFT):
 		return
 	_left_model = (load(HAND_LEFT) as PackedScene).instantiate() as Node3D
-	_left_model.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(-35.0)).scaled(Vector3.ONE * 0.85), Vector3(-0.02, 0.0, 0.12))
+	_left_model.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(-35.0)).scaled(Vector3.ONE * 1.0), Vector3(-0.02, 0.0, 0.12))
 	_left.add_child(_left_model)
 	_hero_meshes(_left_model)
 

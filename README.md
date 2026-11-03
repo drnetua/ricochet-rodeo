@@ -1,7 +1,7 @@
 # Ricochet Rodeo
 
 Абсурдний тир від першої особи: підкидаєш предмети, стріляєш, куля рикошетить у пляшки, мішені й вікна.
-Зараз це прототип core loop — перевіряємо, чи весело стріляти і ланцюжити рикошети. 3D-графіка — заглушки з примітивів, звук — справжній.
+Зараз це прототип core loop з першим рівнем у графіці з концепту: Рівень 1 «Дикий Захід» — моделі Meshy з рефів FLUX 3 (конвеєр `tools/assets`), звук — справжній.
 
 - **GDD:** https://claude.ai/artifact/Jasoede8snHywoHLQusnT3
 - **Рушій:** Godot 4.7.x (Forward+, Jolt Physics), GDScript
@@ -10,7 +10,11 @@
 
 1. Godot **4.7.x**. Project Manager → Import → `project.godot`.
 2. Перше відкриття імпортує звуки (~200 файлів) — це хвилина.
-3. F5. Головна сцена — `scenes/main.tscn`, рівень поки збирається кодом.
+3. F5. Головна сцена — `scenes/main.tscn`; рівень — `scenes/levels/01_wild_west.tscn` (збирає `tools/godot/build_level_01.gd`).
+
+## Рівні з концептів
+
+Конвеєр концепт → рефи FLUX 3 → Meshy → Blender → Godot: `tools/assets/README.md`. Маніфест рівня 1 — `art/levels/01-wild-west/assets.yaml`, порівняння з концептом — `art/levels/01-wild-west/compare.jpg`.
 
 ## Збірка під macOS
 
