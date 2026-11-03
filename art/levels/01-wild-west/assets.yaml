@@ -1,0 +1,472 @@
+# Рівень 1 — Дикий Захід: що генеруємо і як.
+#
+# Конвеєр: tools/assets/level.py 01 --step refs → meshy → clean (див. README у tools/assets).
+# Кроп — прямокутник [x0, y0, x1, y1] у пікселях концепту (1672×941).
+# Методи: M — Meshy multi-image (meshy-7.1, 3 види), S — Meshy Smart Topology (meshy-t2.5, 1 вид),
+#         G — процедурно в Godot (FLUX дає лише текстуру), 2D — картинка FLUX у Godot.
+# size — розмір у метрах уздовж fit (longest | height | width); pivot — center (кидані) або bottom (статичні).
+# collision — none (кидані: колізію будує throwable.gd), convex, mesh.
+# rotate — поворот сирої моделі Meshy в градусах (X, Y, Z Blender), щоб «перед» дивився на гравця.
+
+level: "01"
+title: Дикий Захід
+concepts:
+  "01": art/concepts/01-wild-west.png
+  "02": art/concepts/02-county-fair.png
+
+# Спільний рядок стилю для всіх 5 рівнів. Контури в текстуру не малюємо — їх дає шейдер у Godot.
+style: >-
+  Same art style as the reference concept art: chunky, exaggerated cartoon shapes with rounded,
+  rubbery proportions, combined with photorealistic PBR textures — real scratched metal, worn wood grain,
+  cracked bone, aged leather. Warm golden-hour palette.
+
+# Для 3D-рефів: один предмет, чистий фон — так Meshy краще відділяє форму.
+ref_rules: >-
+  Game asset reference sheet image: a single isolated object, fully visible and centered with margin,
+  plain seamless light grey studio background, soft even studio lighting, no cast shadows, no outlines,
+  no text, no motion blur, no smoke, no sparks, no other objects.
+
+views:
+  front34: three-quarter front view, camera slightly above
+  front: straight front view, camera at the object's mid height, orthographic feel
+  side: exact side view (right profile), orthographic feel
+  back: straight back view, orthographic feel
+
+refs:
+  model: black-forest-labs/flux-3-image
+  resolution: 1.5K
+  aspect_ratio: "1:1"
+
+meshy:
+  M:
+    endpoint: multi-image-to-3d
+    views: [front, side, back]
+    body:
+      ai_model: latest
+      should_remesh: true
+      topology: triangle
+      should_texture: true
+      enable_pbr: true
+      texture_resolution: 2k
+      image_enhancement: false
+      target_formats: [glb]
+      multi_view_thumbnails: true
+  S:
+    endpoint: image-to-3d
+    views: [front34]
+    body:
+      model_type: smart-topology
+      ai_model: meshy-t2.5
+      should_texture: true
+      enable_pbr: true
+      target_formats: [glb]
+      multi_view_thumbnails: true
+
+assets:
+  # --- Пілот: обидва режими Meshy, кращий фіксуємо в use ---
+  - id: hand_revolver
+    name: Права рука в рукавичці + револьвер
+    group: hero
+    methods: [M, S]
+    crop: [900, 300, 1672, 941]
+    prompt: >-
+      a first-person right hand in a worn brown leather cowboy gauntlet glove with a wide stitched cuff,
+      firmly gripping a huge chunky cartoon six-shooter revolver with a fat fluted cylinder, short thick barrel,
+      scratched dark gunmetal steel and a wooden grip with a small silver star inlay; index finger resting
+      along the frame, off the trigger; only the hand, glove cuff and revolver, cut cleanly at the forearm
+    views_override: {front: "straight side view from the left, barrel pointing left", side: "view from behind and above the hand, as the player sees it, barrel pointing away", back: "straight side view from the right, barrel pointing right"}
+    tris: 30000
+    texture: 2048
+    meshy_body: {geometry_resolution: 2k, texture_resolution: 4k}
+    size: 0.62
+    fit: longest
+    pivot: center
+    collision: none
+
+  - id: bullskull
+    name: Череп бізона
+    group: throwable
+    methods: [M, S]
+    crop: [575, 0, 925, 250]
+    prompt: >-
+      a cartoon bison skull with two big curved dark horns, sun-bleached cracked bone, large empty eye sockets
+      and an open jaw with a surprised expression (no eyeballs)
+    tris: 6000
+    texture: 1024
+    size: 1.0
+    fit: longest
+    pivot: center
+    collision: none
+    notes: Очі — 2D-наклейки з анімацією, не геометрія
+
+  - id: crate
+    name: Ящик
+    group: throwable
+    methods: [M, S]
+    crop: [0, 760, 340, 941]
+    prompt: >-
+      a chunky cartoon wooden crate, a perfect cube, thick worn plank boards with a diagonal cross brace on
+      each side and dark iron corner brackets, no text or markings
+    tris: 1500
+    texture: 1024
+    size: 1.0
+    fit: longest
+    pivot: center
+    collision: none
+
+  # --- Кидані предмети ---
+  - id: coin
+    name: Монета
+    group: throwable
+    method: G
+    concept: "02"
+    crop: [1120, 235, 1315, 445]
+    prompt: a big chunky cartoon gold coin face with an embossed five-pointed star and a raised rim, worn shiny gold
+    texture_only: true
+    tris: 500
+    notes: Циліндр у Godot + текстура FLUX (вид зверху, квадрат)
+
+  - id: anvil
+    name: Ковадло
+    group: throwable
+    method: S
+    prompt: >-
+      a chunky cartoon blacksmith anvil, dark forged iron with scratched shiny worn edges, a pointed horn and
+      a heavy stepped base
+    tris: 2000
+    texture: 1024
+    size: 1.0
+    fit: longest
+    pivot: center
+    collision: none
+
+  - id: rubber_chicken
+    name: Гумова курка
+    group: throwable
+    method: M
+    concept: "02"
+    crop: [640, 0, 965, 265]
+    prompt: >-
+      a classic yellow rubber chicken toy with a long neck, red comb and wattle, orange beak and feet,
+      goofy wide-eyed screaming face, glossy rubber, standing pose with wings at its sides
+    tris: 5000
+    texture: 1024
+    size: 0.95
+    fit: longest
+    pivot: center
+    collision: none
+    notes: Перевикористання в Рівні 2
+
+  # --- Цілі ---
+  - id: bottle_brown
+    name: Пляшка коричнева
+    group: target
+    method: S
+    crop: [0, 290, 70, 450]
+    prompt: a tall brown glass whiskey bottle with a long neck and a cork, a worn paper label
+    tris: 1000
+    texture: 1024
+    size: 1.0
+    fit: height
+    pivot: bottom
+    collision: none
+    notes: Скло — матеріал Godot, від Meshy лише форма й етикетка
+
+  - id: bottle_clear
+    name: Пляшка прозора
+    group: target
+    method: S
+    crop: [50, 330, 115, 455]
+    prompt: a clear glass flask bottle with a rounded body and a short neck, no label
+    tris: 1000
+    texture: 1024
+    size: 0.9
+    fit: height
+    pivot: bottom
+    collision: none
+
+  - id: bottle_green
+    name: Пляшка зелена
+    group: target
+    method: S
+    crop: [370, 420, 410, 495]
+    prompt: a green glass wine bottle with sloped shoulders and a long neck
+    tris: 1000
+    texture: 1024
+    size: 1.0
+    fit: height
+    pivot: bottom
+    collision: none
+
+  - id: target_post
+    name: Мішень на стовпі
+    group: target
+    method: S
+    prompt: >-
+      a round wooden target board with painted red and cream concentric rings, chunky weathered wooden rim,
+      mounted on a rough wooden post with a wide base
+    tris: 1500
+    texture: 1024
+    size: 2.9
+    fit: height
+    pivot: bottom
+    collision: none
+    notes: Диск — окремо (TargetBoard), модель дає стовп і вигляд
+
+  - id: gong_frame
+    name: Рама гонга
+    group: target
+    method: S
+    prompt: >-
+      a sturdy wooden gong stand: two thick weathered timber posts and a top crossbeam with iron bolts,
+      two short iron chains hanging from the beam, empty — no gong
+    tris: 3000
+    texture: 1024
+    size: 2.2
+    fit: width
+    pivot: bottom
+    collision: convex
+    notes: Пластина — метал у Godot (MetalPlate)
+
+  - id: window_frame
+    name: Рама вікна
+    group: target
+    method: S
+    crop: [1385, 190, 1672, 515]
+    prompt: >-
+      a weathered wooden saloon window frame with a 3 by 3 grid of thin mullions and a thick sill,
+      empty — no glass, no curtains, seen from the front
+    tris: 1000
+    texture: 1024
+    size: 2.0
+    fit: height
+    pivot: center
+    collision: none
+    notes: Скло — Breakable
+
+  # --- Оточення ---
+  - id: saloon_wall
+    name: Стіна салуну, модуль
+    group: env
+    method: M
+    crop: [770, 0, 1672, 700]
+    prompt: >-
+      a modular facade section of an old western saloon wall, about 4 by 4 metres: cracked adobe plaster with
+      exposed red bricks, heavy dark wooden corner posts and a top beam, no windows, no doors, no sign, flat back
+    tris: 8000
+    texture: 2048
+    size: 4.0
+    fit: width
+    pivot: bottom
+    collision: convex
+
+  - id: saloon_sign
+    name: Вивіска SALOON
+    group: env
+    method: S
+    crop: [1200, 0, 1672, 255]
+    prompt: >-
+      a large weathered wooden saloon sign board with an ornate carved frame and faded red paint,
+      completely blank — no letters
+    tris: 2000
+    texture: 2048
+    size: 5.0
+    fit: width
+    pivot: center
+    collision: convex
+    notes: Напис SALOON накладаю шрифтом
+
+  - id: porch
+    name: Ґанок зі стовпами
+    group: env
+    method: S
+    prompt: >-
+      a western saloon porch: a wooden plank floor deck raised on short beams, a slanted plank roof awning
+      held up by four rough wooden posts, weathered wood
+    tris: 4000
+    texture: 2048
+    size: 8.0
+    fit: width
+    pivot: bottom
+    collision: mesh
+
+  - id: swing_doors
+    name: Двері-крила
+    group: env
+    method: S
+    prompt: a pair of western saloon batwing swinging doors with weathered wooden slats and iron hinges
+    tris: 1000
+    texture: 1024
+    size: 1.8
+    fit: width
+    pivot: bottom
+    collision: none
+
+  - id: lantern
+    name: Ліхтар
+    group: env
+    method: S
+    crop: [1100, 110, 1205, 275]
+    prompt: an old black iron wall-mounted oil lantern hanging from a curled bracket, with a glass chimney
+    tris: 1500
+    texture: 1024
+    size: 0.8
+    fit: height
+    pivot: center
+    collision: none
+    notes: Емісія + OmniLight у Godot
+
+  - id: fence_section
+    name: Секція паркану
+    group: env
+    method: S
+    crop: [0, 430, 770, 790]
+    prompt: >-
+      a section of rough weathered wooden ranch fence, about 3 metres wide: uneven vertical planks nailed to
+      two horizontal rails and a flat top rail, gaps between planks
+    tris: 2000
+    texture: 1024
+    size: 3.0
+    fit: width
+    pivot: bottom
+    collision: convex
+    notes: Повтор уздовж сцени; на верхній рейці стоять пляшки
+
+  - id: barrel
+    name: Бочка
+    group: env
+    method: S
+    crop: [1565, 450, 1672, 705]
+    prompt: a chunky wooden whiskey barrel with dark iron hoops, weathered staves
+    tris: 1500
+    texture: 1024
+    size: 1.2
+    fit: height
+    pivot: bottom
+    collision: convex
+
+  - id: cactus
+    name: Кактус сагуаро
+    group: env
+    method: S
+    crop: [695, 350, 805, 612]
+    prompt: a cartoon saguaro cactus with two raised arms, chunky ribbed green trunk with small spines
+    tris: 2500
+    texture: 1024
+    size: 3.6
+    fit: height
+    pivot: bottom
+    collision: convex
+
+  - id: wagon_wheel
+    name: Колесо воза
+    group: env
+    method: S
+    crop: [875, 490, 1055, 700]
+    prompt: an old wooden wagon wheel with twelve spokes, a round hub and a rusty iron rim
+    tris: 2000
+    texture: 1024
+    size: 1.5
+    fit: height
+    pivot: bottom
+    collision: convex
+
+  - id: rope_coil
+    name: Бухта мотузки
+    group: env
+    method: S
+    crop: [60, 575, 185, 775]
+    prompt: a coiled hemp lasso rope, thick twisted fibres, hanging loop
+    tris: 1000
+    texture: 1024
+    size: 0.8
+    fit: height
+    pivot: center
+    collision: none
+
+  - id: tumbleweed
+    name: Перекотиполе
+    group: env
+    method: S
+    crop: [395, 555, 595, 730]
+    prompt: a round dry tumbleweed ball made of tangled thin twigs
+    tris: 2000
+    texture: 1024
+    size: 1.0
+    fit: longest
+    pivot: center
+    collision: none
+    notes: Котиться за вітром
+
+  - id: rocks
+    name: Каміння, набір з 3
+    group: env
+    method: S
+    crop: [325, 750, 485, 865]
+    prompt: a set of three rounded desert sandstone rocks of different sizes lying together
+    tris: 1000
+    texture: 1024
+    size: 1.2
+    fit: width
+    pivot: bottom
+    collision: convex
+
+  # --- 2D ---
+  - id: backdrop
+    name: "Бекдроп: небо і столові гори"
+    group: 2d
+    method: 2D
+    crop: [380, 0, 1000, 500]
+    prompt: >-
+      empty background plate: golden hour sky with soft pink and purple clouds, a low sun near the horizon and
+      distant red mesas and buttes of a desert valley; no foreground props, no buildings, no characters, no text
+    aspect_ratio: "21:9"
+    resolution: 4K
+    notes: 2–3 шари паралаксу (небо, далекі гори)
+
+  - id: cowboy_cutout
+    name: Картонний п'яний ковбой
+    group: 2d
+    method: 2D
+    prompt: >-
+      flat cardboard stand-up cutout of a drunk cartoon cowboy with a big hat, red nose and a bottle in hand,
+      swaying, printed illustration, visible cardboard edge, front view, plain light grey background
+    aspect_ratio: "2:3"
+    resolution: 1.5K
+    notes: Площина з товщиною картону; фон прибираю
+
+  - id: ground_decals
+    name: Трава, пил, тріщини
+    group: 2d
+    method: 2D
+    crop: [330, 640, 1100, 941]
+    prompt: >-
+      sprite sheet of dry desert grass tufts and small dry weeds, separate clumps evenly spaced on a plain light
+      grey background, side view, no ground
+    aspect_ratio: "16:9"
+    resolution: 1.5K
+    notes: Ґрунт — CC0-текстура ambientCG
+
+  - id: hud
+    name: "HUD: табличка грошей, набій, приціл"
+    group: 2d
+    method: 2D
+    crop: [0, 0, 290, 90]
+    prompt: >-
+      game UI kit on a plain light grey background, separated: an empty wooden western money plaque with a
+      brass money-bag icon on the left (no numbers), a single brass revolver cartridge icon, a round golden
+      crosshair; chunky cartoon style, no text
+    aspect_ratio: "16:9"
+    resolution: 1.5K
+
+  - id: stickers
+    name: "Стікери RICOCHET!, +50$, ×2, CHAIN, OOPS"
+    group: 2d
+    method: 2D
+    crop: [100, 220, 620, 345]
+    prompt: >-
+      set of comic stickers in bold western lettering with thick white outline and dark border, isolated and
+      separated on a plain light grey background: "RICOCHET!", "+50$", "x2", "CHAIN", "OOPS!"
+    aspect_ratio: "16:9"
+    resolution: 1.5K
+    notes: Текст — шрифтом, якщо FLUX пише криво

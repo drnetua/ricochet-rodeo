@@ -12,6 +12,9 @@ __MACOSX/
 .vscode/
 .idea/
 
+# Кеш генерації асетів (рефи FLUX, сирі моделі Meshy, лог витрат) — лише локально
+source_assets/gen/
+
 # Python
 __pycache__/
 *.pyc
