@@ -63,11 +63,14 @@ meshy:
       multi_view_thumbnails: true
 
 assets:
-  # --- Пілот: обидва режими Meshy, кращий фіксуємо в use ---
+  # --- Пілот: обидва режими Meshy, кращий записано в use ---
+  # Підсумок пілоту (2026-11-03): M — для органічних і несиметричних форм (рука з передпліччям, череп),
+  # S — для простих симетричних пропсів (ящик: у M однакові види дають пласку дошку).
   - id: hand_revolver
     name: Права рука в рукавичці + револьвер
     group: hero
     methods: [M, S]
+    use: M
     crop: [900, 300, 1672, 941]
     prompt: >-
       a first-person right hand in a worn brown leather cowboy gauntlet glove with a wide stitched cuff,
@@ -87,6 +90,7 @@ assets:
     name: Череп бізона
     group: throwable
     methods: [M, S]
+    use: M
     crop: [575, 0, 925, 250]
     prompt: >-
       a cartoon bison skull with two big curved dark horns, sun-bleached cracked bone, large empty eye sockets
@@ -103,6 +107,7 @@ assets:
     name: Ящик
     group: throwable
     methods: [M, S]
+    use: S
     crop: [0, 760, 340, 941]
     prompt: >-
       a chunky cartoon wooden crate, a perfect cube, thick worn plank boards with a diagonal cross brace on
@@ -113,6 +118,24 @@ assets:
     fit: longest
     pivot: center
     collision: none
+
+  - id: hand_left
+    name: Ліва рука з набоєм
+    group: hero
+    method: M
+    crop: [1130, 560, 1672, 941]
+    prompt: >-
+      a first-person left hand in the same worn brown leather cowboy gauntlet glove with a wide stitched cuff and a
+      bare forearm, palm up, holding a single brass revolver cartridge between thumb and index finger; only the hand,
+      glove and forearm, forearm cut cleanly
+    turn_views: ["view from the left side", "view from behind and slightly above the hand, as the player sees it", "view from the right side"]
+    tris: 12000
+    texture: 2048
+    size: 0.5
+    fit: longest
+    pivot: center
+    collision: none
+    notes: З'являється знизу при перезарядці
 
   # --- Кидані предмети ---
   - id: coin
