@@ -1,0 +1,21 @@
+# Godot 4
+.godot/
+/android/
+/export/
+*.translation
+
+# macOS / editors
+.DS_Store
+__MACOSX/
+._*
+*.swp
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Blender autosaves
+*.blend1
+*.blend2
