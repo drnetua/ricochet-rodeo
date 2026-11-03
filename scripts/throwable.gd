@@ -1,5 +1,5 @@
 extends RigidBody3D
-## Підкинутий предмет: модель з примітивів, аркадна гравітація, реакція на кулю.
+## Підкинутий предмет: модель з Blender (або заглушка з примітивів), аркадна гравітація, реакція на кулю.
 
 const ThrowableData = preload("res://scripts/data/throwable_data.gd")
 const Util = preload("res://scripts/util.gd")
@@ -13,6 +13,11 @@ const HIT_SOUND := {
 	"crate": "hit_wood",
 	"anvil": "hit_anvil",
 	"chicken": "hit_rubber_chicken",
+}
+## Готові моделі з Blender (джерела — art/models/). Предмети без моделі збираються з примітивів.
+const MODEL_PATHS := {
+	"crate": "res://assets/models/props/crate.glb",
+	"skull": "res://assets/models/props/bullskull.glb",
 }
 
 var data: ThrowableData
@@ -128,28 +133,23 @@ func _build() -> void:
 			col.shape = coin_shape
 			col.rotation_degrees = Vector3(90, 0, 0)
 		"skull":
-			Util.sphere(_visual, 0.45 * s, Vector3(0, 0.05 * s, 0), base, Vector3(1.0, 0.95, 1.0))
-			Util.box(_visual, Vector3(0.55, 0.25, 0.5) * s, Vector3(0, -0.32 * s, 0.08 * s), base)
-			# Великі «вирячені» очі — головне джерело абсурду.
-			var eye_white := Util.mat(Color(1, 1, 1), 0.4)
-			Util.sphere(_visual, 0.14 * s, Vector3(-0.17 * s, 0.1 * s, 0.34 * s), eye_white)
-			Util.sphere(_visual, 0.14 * s, Vector3(0.17 * s, 0.1 * s, 0.34 * s), eye_white)
-			Util.sphere(_visual, 0.06 * s, Vector3(-0.15 * s, 0.1 * s, 0.47 * s), dark)
-			Util.sphere(_visual, 0.06 * s, Vector3(0.19 * s, 0.1 * s, 0.47 * s), dark)
-			Util.box(_visual, Vector3(0.08, 0.1, 0.06) * s, Vector3(0, -0.12 * s, 0.42 * s), dark)
-			var horn := Util.mat(Color(0.3, 0.22, 0.15), 0.5, 0.0, true)
-			Util.cyl(_visual, 0.02 * s, 0.09 * s, 0.5 * s, Vector3(-0.58 * s, 0.24 * s, 0), horn, Vector3(0, 0, 70))
-			Util.cyl(_visual, 0.02 * s, 0.09 * s, 0.5 * s, Vector3(0.58 * s, 0.24 * s, 0), horn, Vector3(0, 0, -70))
-			var skull_shape := SphereShape3D.new()
-			skull_shape.radius = 0.48 * s
-			col.shape = skull_shape
+			if _add_model(s):
+				# Опукла оболонка моделі: влучання в роги теж зараховуються.
+				col.shape = _model_hull()
+			else:
+				_build_skull_placeholder(s, base, dark)
+			if col.shape == null:
+				var skull_shape := SphereShape3D.new()
+				skull_shape.radius = 0.48 * s
+				col.shape = skull_shape
 		"crate":
-			Util.box(_visual, Vector3.ONE * s, Vector3.ZERO, base)
-			var plank := Util.mat(data.color.darkened(0.35), 0.9, 0.0, true)
-			Util.box(_visual, Vector3(1.3, 0.14, 0.04) * s, Vector3(0, 0, 0.51 * s), plank, Vector3(0, 0, 45))
-			Util.box(_visual, Vector3(1.3, 0.14, 0.04) * s, Vector3(0, 0, 0.51 * s), plank, Vector3(0, 0, -45))
-			Util.box(_visual, Vector3(1.04, 0.14, 1.04) * s, Vector3(0, 0.45 * s, 0), plank)
-			Util.box(_visual, Vector3(1.04, 0.14, 1.04) * s, Vector3(0, -0.45 * s, 0), plank)
+			if not _add_model(s):
+				Util.box(_visual, Vector3.ONE * s, Vector3.ZERO, base)
+				var plank := Util.mat(data.color.darkened(0.35), 0.9, 0.0, true)
+				Util.box(_visual, Vector3(1.3, 0.14, 0.04) * s, Vector3(0, 0, 0.51 * s), plank, Vector3(0, 0, 45))
+				Util.box(_visual, Vector3(1.3, 0.14, 0.04) * s, Vector3(0, 0, 0.51 * s), plank, Vector3(0, 0, -45))
+				Util.box(_visual, Vector3(1.04, 0.14, 1.04) * s, Vector3(0, 0.45 * s, 0), plank)
+				Util.box(_visual, Vector3(1.04, 0.14, 1.04) * s, Vector3(0, -0.45 * s, 0), plank)
 			var crate_shape := BoxShape3D.new()
 			crate_shape.size = Vector3.ONE * s
 			col.shape = crate_shape
@@ -181,3 +181,67 @@ func _build() -> void:
 			default_shape.radius = 0.5 * s
 			col.shape = default_shape
 	add_child(col)
+
+
+## Додає модель з Blender, якщо вона є для цього предмета. Модель — 1 м з центром у початку координат,
+## тож масштаб = data.size, як і в колізії. false — моделі нема, будуємо заглушку.
+func _add_model(s: float) -> bool:
+	var path: String = MODEL_PATHS.get(data.id, "")
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return false
+	var scene := load(path) as PackedScene
+	if scene == null:
+		push_warning("Не вдалося завантажити модель %s" % path)
+		return false
+	var model := scene.instantiate() as Node3D
+	model.scale = Vector3.ONE * s
+	_visual.add_child(model)
+	return true
+
+## Заглушка з примітивів, якщо моделі черепа нема.
+func _build_skull_placeholder(s: float, base: Material, dark: Material) -> void:
+	Util.sphere(_visual, 0.45 * s, Vector3(0, 0.05 * s, 0), base, Vector3(1.0, 0.95, 1.0))
+	Util.box(_visual, Vector3(0.55, 0.25, 0.5) * s, Vector3(0, -0.32 * s, 0.08 * s), base)
+	# Великі «вирячені» очі — головне джерело абсурду.
+	var eye_white := Util.mat(Color(1, 1, 1), 0.4)
+	Util.sphere(_visual, 0.14 * s, Vector3(-0.17 * s, 0.1 * s, 0.34 * s), eye_white)
+	Util.sphere(_visual, 0.14 * s, Vector3(0.17 * s, 0.1 * s, 0.34 * s), eye_white)
+	Util.sphere(_visual, 0.06 * s, Vector3(-0.15 * s, 0.1 * s, 0.47 * s), dark)
+	Util.sphere(_visual, 0.06 * s, Vector3(0.19 * s, 0.1 * s, 0.47 * s), dark)
+	Util.box(_visual, Vector3(0.08, 0.1, 0.06) * s, Vector3(0, -0.12 * s, 0.42 * s), dark)
+	var horn := Util.mat(Color(0.3, 0.22, 0.15), 0.5, 0.0, true)
+	Util.cyl(_visual, 0.02 * s, 0.09 * s, 0.5 * s, Vector3(-0.58 * s, 0.24 * s, 0), horn, Vector3(0, 0, 70))
+	Util.cyl(_visual, 0.02 * s, 0.09 * s, 0.5 * s, Vector3(0.58 * s, 0.24 * s, 0), horn, Vector3(0, 0, -70))
+
+
+## Опукла оболонка першої сітки моделі в координатах тіла. null — сітки нема.
+func _model_hull() -> Shape3D:
+	var mi := _find_mesh(_visual)
+	if mi == null or mi.mesh == null:
+		return null
+	var hull := mi.mesh.create_convex_shape(true, true) as ConvexPolygonShape3D
+	if hull == null:
+		return null
+	# Тіло ще не в дереві сцени, тож трансформу до _visual збираємо вручну.
+	var xf := Transform3D.IDENTITY
+	var n: Node = mi
+	while n != null and n != _visual:
+		if n is Node3D:
+			xf = (n as Node3D).transform * xf
+		n = n.get_parent()
+	xf = _visual.transform * xf
+	var pts := PackedVector3Array()
+	for p in hull.points:
+		pts.append(xf * p)
+	hull.points = pts
+	return hull
+
+
+func _find_mesh(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D:
+		return node as MeshInstance3D
+	for c in node.get_children():
+		var m := _find_mesh(c)
+		if m != null:
+			return m
+	return null

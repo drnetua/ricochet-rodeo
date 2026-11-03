@@ -7,6 +7,7 @@ const Thrower = preload("res://scripts/thrower.gd")
 const Player = preload("res://scripts/player.gd")
 const ScoreManager = preload("res://scripts/score_manager.gd")
 const Hud = preload("res://scripts/ui/hud.gd")
+const Crosshair = preload("res://scripts/ui/crosshair.gd")
 const Fx = preload("res://scripts/fx/fx.gd")
 const Sfx = preload("res://scripts/fx/sfx.gd")
 
@@ -59,7 +60,7 @@ func _ready() -> void:
 	score.shot_finished.connect(_on_shot_finished)
 	score.combo_broken.connect(_on_combo_broken)
 	thrower.object_finished.connect(_on_object_finished)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	_set_aiming(true)
 	_start_audio()
 
 
@@ -81,7 +82,7 @@ func _on_accent() -> void:
 
 func _exit_tree() -> void:
 	Engine.time_scale = 1.0
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_set_aiming(false)
 
 
 func _process(_delta: float) -> void:
@@ -99,10 +100,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().reload_current_scene()
 	elif event.is_action_pressed("ui_cancel"):
 		sfx.play("ui_click")
-		if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		_set_aiming(Input.mouse_mode == Input.MOUSE_MODE_VISIBLE)
+
+
+
+## Ігровий режим: курсор-приціл від ОС, мишка не виходить за вікно.
+## Поза ним (Esc) — звичайна стрілка.
+func _set_aiming(on: bool) -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CONFINED if on else Input.MOUSE_MODE_VISIBLE
+	Crosshair.set_aim_cursor(on)
 
 
 func _try_throw() -> void:

@@ -16,6 +16,7 @@ var _throws: Label
 var _weapon: Label
 var _ammo: Label
 var _help: Label
+var _fps: Label
 var _results: PanelContainer
 var _results_text: Label
 var _score: ScoreManager
@@ -50,6 +51,9 @@ func _ready() -> void:
 		lab.size = Vector2(520.0, 40.0)
 	_help = _label(18, Color(1.0, 1.0, 1.0, 0.75))
 	_help.text = "Пробіл — кинути   ЛКМ — постріл   R — перезарядка   1/2 — зброя   Esc — курсор"
+	# Лічильник кадрів лише в debug-збірках: діагностика продуктивності.
+	if OS.is_debug_build():
+		_fps = _label(18, Color(0.6, 1.0, 0.6, 0.9))
 	crosshair = Crosshair.new()
 	_root.add_child(crosshair)
 	_build_results()
@@ -81,6 +85,9 @@ func _process(_delta: float) -> void:
 	_weapon.position = Vector2(s.x - 548.0, s.y - 104.0)
 	_ammo.position = Vector2(s.x - 548.0, s.y - 66.0)
 	_help.position = Vector2(28.0, s.y - 44.0)
+	if _fps != null:
+		_fps.text = "%d FPS" % Engine.get_frames_per_second()
+		_fps.position = Vector2(s.x - 110.0, 14.0)
 	if _score != null:
 		var left := _score.combo_time_left()
 		_combo_bar.value = left

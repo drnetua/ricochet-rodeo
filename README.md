@@ -12,6 +12,19 @@
 2. Перше відкриття імпортує звуки (~200 файлів) — це хвилина.
 3. F5. Головна сцена — `scenes/main.tscn`, рівень поки збирається кодом.
 
+## Збірка під macOS
+
+```sh
+tools/build_macos.sh          # release-збірка і запуск
+tools/build_macos.sh --debug  # debug-збірка
+OPEN=0 tools/build_macos.sh   # лише зібрати
+```
+
+- Результат: `export/macos/Ricochet Rodeo.app` (в git не потрапляє).
+- Пресет `macOS` у `export_presets.cfg`: ad-hoc підпис без сертифіката, без нотаризації — для запуску на своєму Mac.
+- Потрібні шаблони експорту Godot (Editor → Manage Export Templates).
+- На іншому Mac після AirDrop/завантаження: `xattr -dr com.apple.quarantine "Ricochet Rodeo.app"`.
+
 ## Керування
 
 | Дія | Клавіша |
@@ -52,6 +65,8 @@ scripts/
 audio/sfx|amb|music/            готові звуки (генеруються скриптом, див. нижче)
 source_assets/audio_raw/        сирі звуки з MusicGPT (Godot їх не імпортує)
 art/concepts/                   концепт-арт — планка якості MVP
+art/models/                     джерела моделей (.blend, Godot їх не імпортує)
+assets/models/                  моделі для гри (.glb), експорт з art/models/
 tools/audio/slice_sfx.py        нарізка і нормалізація звуків
 docs/prompts.md                 промпти для концептів і звуків
 ```
@@ -88,4 +103,3 @@ python3 tools/audio/slice_sfx.py --src source_assets/audio_raw --project .
 - Робоче середовище на Mac з Blender: моделі пропсів з концептів (Meshy/Tripo → Blender → glTF).
 - Перенести рівень у `.tscn` зі справжніми моделями, 2D-бекдропом і пост-обробкою (див. GDD).
 - Комікс-написи (RICOCHET!, CHAIN ×N) спрайтами замість `Label3D`, нумерація точок рикошету.
-- Перед першими `.blend` / `.glb` перейти на Git LFS для бінарних асетів.

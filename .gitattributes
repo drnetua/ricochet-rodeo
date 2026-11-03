@@ -5,8 +5,13 @@
 *.mp3 binary
 *.png binary
 *.jpg binary
-*.glb binary
+*.glb filter=lfs diff=lfs merge=lfs -text
 *.gltf text
-*.blend binary
-*.fbx binary
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
 *.res binary
+
+# 3D sources and HDR textures go through Git LFS
+*.obj filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text
+*.hdr filter=lfs diff=lfs merge=lfs -text
