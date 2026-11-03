@@ -146,7 +146,9 @@ def run_asset(m: dict, a: dict, key: str, force: bool, dry: bool) -> list[str]:
             have.rename(have.with_name(f"{have.stem}.old{stamp}{have.suffix}"))
         img, ext, cost = call_flux(body, key)
         p = out_dir / f"{a['id']}_{view}.{ext}"
-        p.write_bytes(img)
+        tmp = p.with_name(p.name + ".part")
+        tmp.write_bytes(img)
+        tmp.replace(p)  # атомарно: перерваний запуск не лишає битого файлу
         (out_dir / f"{a['id']}_{view}.prompt.txt").write_text(body["prompt"])
         log_cost(m, "openrouter", a["id"], f"flux {view} {body['resolution']}", cost, "USD")
         log.append(f"  + {p.name} ${cost:.3f}")
