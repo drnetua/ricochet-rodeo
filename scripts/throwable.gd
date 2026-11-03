@@ -7,6 +7,12 @@ const Util = preload("res://scripts/util.gd")
 signal finished(body: RigidBody3D, was_hit: bool)
 
 const MAX_AGE := 9.0
+## Політ повільніший на 30%: та сама дуга, але швидкості ×0.7, тож гравітація ×0.49.
+const FLIGHT_SPEED := 0.7
+## «Зависання» біля вершини: коли вертикальна швидкість менша за поріг
+## (частка стартової, задає кидалка), гравітація плавно слабшає до APEX_GRAVITY.
+const APEX_ZONE := 0.35
+const APEX_GRAVITY := 0.3
 const HIT_SOUND := {
 	"coin": "hit_coin",
 	"skull": "hit_bone",
@@ -21,6 +27,10 @@ const MODEL_PATHS := {
 }
 
 var data: ThrowableData
+## Гравітація предмета без «зависання» (уже з урахуванням FLIGHT_SPEED).
+var base_gravity_scale: float = 1.0
+## Вертикальна швидкість (м/с), нижче якої діє «зависання». 0 — вимкнено.
+var apex_slow_speed: float = 0.0
 var hits: int = 0
 var _age: float = 0.0
 var _done: bool = false
@@ -31,7 +41,8 @@ var _visual: Node3D
 func setup(d: ThrowableData) -> void:
 	data = d
 	mass = d.mass
-	gravity_scale = d.gravity_scale
+	base_gravity_scale = d.gravity_scale * FLIGHT_SPEED * FLIGHT_SPEED
+	gravity_scale = base_gravity_scale
 	linear_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
 	linear_damp = 0.0
 	angular_damp_mode = RigidBody3D.DAMP_MODE_REPLACE
@@ -69,7 +80,8 @@ func on_bullet_hit(hit_pos: Vector3, dir: Vector3, _normal: Vector3, impulse: fl
 		pts += 20 * (hits - 1)
 		tags.append("Жонглювання ×%d" % hits)
 	# Поштовх: переважно вгору і вбік — щоб предмет лишався в кадрі і його можна було влучити знову.
-	var j := impulse * sqrt(mass)
+	# ×FLIGHT_SPEED: при меншій гравітації той самий поштовх підкинув би вдвічі вище.
+	var j := impulse * sqrt(mass) * FLIGHT_SPEED
 	var side := Vector3(dir.x, 0.0, dir.z * 0.25)
 	if side.length_squared() > 0.0001:
 		side = side.normalized()
@@ -94,10 +106,31 @@ func _physics_process(delta: float) -> void:
 	if _done:
 		return
 	_age += delta
+	if apex_slow_speed > 0.0:
+		gravity_scale = base_gravity_scale * apex_gravity_factor(absf(linear_velocity.y), apex_slow_speed)
 	var p := global_position
 	var resting := _age > 1.0 and p.y < 1.2 and linear_velocity.length() < 0.6
 	if p.y < -3.0 or absf(p.x) > 22.0 or _age > MAX_AGE or resting:
 		_finish()
+
+
+## Частка гравітації залежно від вертикальної швидкості: у вершині — APEX_GRAVITY.
+static func apex_gravity_factor(vy_abs: float, zone: float) -> float:
+	return lerpf(APEX_GRAVITY, 1.0, smoothstep(0.0, zone, vy_abs))
+
+
+## Висота (x) і час (y), за які предмет у зоні «зависання» гальмує від zone до 0.
+static func apex_zone(g: float, zone: float) -> Vector2:
+	const STEPS := 32
+	var h := 0.0
+	var t := 0.0
+	var dv := zone / STEPS
+	for i in STEPS:
+		var v := (float(i) + 0.5) * dv
+		var a := g * apex_gravity_factor(v, zone)
+		h += v * dv / a
+		t += dv / a
+	return Vector2(h, t)
 
 
 func _finish() -> void:

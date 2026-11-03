@@ -10,6 +10,9 @@ signal trick_started(two_handed: bool)
 
 const BASE_POS := Vector3(0.42, -0.34, -0.82)
 const IDLE_TRICK_AFTER := 5.0
+## Поріг наведення: зброя ігнорує рухи прицілу, менші за цей кут, і йде
+## слідом, лише коли приціл відійшов далі, — без дрібного тремтіння.
+const AIM_DEADZONE_DEG := 1.5
 const LEFT_HIDDEN := Vector3(-0.38, -0.55, 0.3)
 const LEFT_ON_FOREND := Vector3(0.0, -0.085, -0.42)
 const LEFT_AT_CYLINDER := Vector3(-0.08, -0.05, -0.06)
@@ -19,6 +22,7 @@ var weapon: WeaponData
 
 var _aim_point := Vector3(0.0, 3.0, -10.0)
 var _aim_q := Quaternion.IDENTITY
+var _aim_dir := Vector3(0.0, 0.25, -1.0).normalized()
 var _recoil: float = 0.0
 var _push: float = 0.0
 var _t: float = 0.0
@@ -96,7 +100,13 @@ func _process(delta: float) -> void:
 	# Зброя доганяє приціл з інерцією: важча зброя — повільніше.
 	var to := _aim_point - _aim.global_position
 	if to.length_squared() > 0.0001:
-		var target_q := Basis.looking_at(to.normalized(), Vector3.UP).get_rotation_quaternion()
+		var want := to.normalized()
+		var ang := _aim_dir.angle_to(want)
+		var dz := deg_to_rad(AIM_DEADZONE_DEG)
+		if ang > dz:
+			# Підтягуємо напрямок рівно настільки, щоб приціл лишився на межі зони.
+			_aim_dir = _aim_dir.slerp(want, (ang - dz) / ang).normalized()
+		var target_q := Basis.looking_at(_aim_dir, Vector3.UP).get_rotation_quaternion()
 		_aim_q = _aim_q.slerp(target_q, 1.0 - exp(-weapon.aim_lag * delta))
 	var b := Basis(_aim_q) * Basis(Vector3.RIGHT, _recoil)
 	_aim.global_transform = Transform3D(b, _aim.global_position)

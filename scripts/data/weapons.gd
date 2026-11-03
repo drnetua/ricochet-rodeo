@@ -16,7 +16,7 @@ static func revolver() -> WeaponData:
 	w.two_handed = false
 	w.recoil_kick_deg = 16.0
 	w.recoil_push = 0.06
-	w.aim_lag = 16.0
+	w.aim_lag = 10.0
 	w.impulse = 7.0
 	w.camera_shake = 0.35
 	w.shot_sound = "revolver_shot"
@@ -37,7 +37,7 @@ static func lever_rifle() -> WeaponData:
 	w.two_handed = true
 	w.recoil_kick_deg = 10.0
 	w.recoil_push = 0.1
-	w.aim_lag = 9.0
+	w.aim_lag = 7.0
 	w.impulse = 11.0
 	w.camera_shake = 0.55
 	w.shot_sound = "rifle_shot"

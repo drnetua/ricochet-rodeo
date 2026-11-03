@@ -19,6 +19,9 @@ const SWAY_YAW := 4.0
 const SWAY_PITCH := 2.5
 const RANGE := 90.0
 const MAX_SEGMENTS := 10
+## Зброя дивиться в точку на цій відстані вздовж прицілу (без raycast:
+## інакше предмети, що пролітають під курсором, смикають ствол).
+const AIM_DISTANCE := 20.0
 
 var camera: Camera3D
 var viewmodel: Viewmodel
@@ -90,12 +93,12 @@ func _process(delta: float) -> void:
 	var s := _shake * _shake
 	camera.h_offset = randf_range(-1.0, 1.0) * s * 0.08
 	camera.v_offset = randf_range(-1.0, 1.0) * s * 0.08
+	_update_aim_point()
 	viewmodel.set_aim_point(_aim_point)
 
 
 func _physics_process(delta: float) -> void:
 	_cooldown = maxf(_cooldown - delta, 0.0)
-	_update_aim_point()
 	if _want_fire:
 		_want_fire = false
 		_try_fire()
@@ -103,14 +106,7 @@ func _physics_process(delta: float) -> void:
 
 func _update_aim_point() -> void:
 	var m := get_viewport().get_mouse_position()
-	var from := camera.project_ray_origin(m)
-	var dir := camera.project_ray_normal(m)
-	var q := PhysicsRayQueryParameters3D.create(from, from + dir * RANGE)
-	var res := get_world_3d().direct_space_state.intersect_ray(q)
-	if res.is_empty():
-		_aim_point = from + dir * 30.0
-	else:
-		_aim_point = res["position"]
+	_aim_point = camera.project_ray_origin(m) + camera.project_ray_normal(m) * AIM_DISTANCE
 
 
 func _equip(index: int) -> void:
