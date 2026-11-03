@@ -24,7 +24,7 @@ const HAND_LEFT := "res://assets/models/01/hand_left.glb"
 const REVOLVER_YAW := -90.0
 const REVOLVER_PITCH := -15.0
 const REVOLVER_SCALE := 1.55
-const REVOLVER_OFFSET := Vector3(0.0, 0.08, 0.14)
+const REVOLVER_OFFSET := Vector3(0.0, 0.05, 0.26)
 const REVOLVER_MUZZLE := Vector3(-0.295, 0.169, -0.027)
 ## Окреме світло лише для руки: шар 20 у моделей рук і cull_mask світла.
 const HERO_LAYER := 1 << 19

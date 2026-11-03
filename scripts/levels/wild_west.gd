@@ -43,8 +43,8 @@ func _process(delta: float) -> void:
 	_tumble_t += delta
 	var p := _tumbleweed.position
 	p.x += delta * 1.6
-	if p.x > 9.0:
-		p.x = -9.0
+	if p.x > 7.0:
+		p.x = -6.0
 	p.y = 0.5 + absf(sin(_tumble_t * 3.1)) * 0.35
 	_tumbleweed.position = p
 	_tumbleweed.rotate_z(-delta * 3.2)
@@ -155,7 +155,8 @@ func _backdrop() -> void:
 	mi.material_override = m
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	# Горизонт картинки — на 55 % висоти згори; ставимо його на рівень очей (1.6 м).
-	mi.position = Vector3(6.0, 1.6 + (0.55 - 0.5) * 275.0 - 4.0, -170.0)
+	# Зсув уліво: великі столові гори з картинки — над двором, а не за салуном.
+	mi.position = Vector3(-120.0, 1.6 + (0.55 - 0.5) * 275.0 - 4.0, -170.0)
 	add_child(mi)
 
 
@@ -238,12 +239,14 @@ func _grass() -> void:
 	var holder := Node3D.new()
 	holder.name = "Grass"
 	add_child(holder)
-	for i in 70:
-		var z := rng.randf_range(-36.0, -3.0)
-		var x := rng.randf_range(-7.0, 7.0)
+	for i in 60:
+		var z := rng.randf_range(-24.0, -3.0)
+		# Двір між парканом (x ≈ −6.2) і фасадом салуну (x падає з глибиною, фасад під 30°).
+		var x_max := minf(7.0, 12.3 - 0.577 * (absf(z) - 6.0) - 0.9)
+		var x := rng.randf_range(-5.8, x_max)
 		# Більше трави біля паркану й стіни, менше в центрі (там летять предмети).
-		if absf(x) < 3.0 and rng.randf() < 0.6:
-			x = signf(x if x != 0.0 else 1.0) * rng.randf_range(3.0, 7.0)
+		if absf(x) < 2.5 and rng.randf() < 0.6:
+			x = -5.8 + rng.randf() * 2.0 if rng.randf() < 0.5 else x_max - rng.randf() * 2.0
 		var s := Sprite3D.new()
 		s.texture = tex[rng.randi() % tex.size()]
 		s.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
