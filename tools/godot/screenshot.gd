@@ -6,7 +6,7 @@ extends SceneTree
 ## out.png  — куди зберегти (за замовчуванням screenshot.png)
 ## scene    — сцена (res://scenes/main.tscn)
 ## frames   — скільки кадрів чекати перед знімком (90)
-## action   — "throw": підкинути предмет і зняти його в польоті; "reload": зняти перезарядку
+## action   — "throw": підкинути предмет і зняти його в польоті; "reload[:N]": перезарядка; "sticker": стікер RICOCHET!
 
 var _out := "screenshot.png"
 var _frames := 90
@@ -40,6 +40,11 @@ func _process(_delta: float) -> bool:
 		if player != null:
 			player.ammo[player.weapon.id] = 0
 			player.call("_start_reload")
+	# "sticker" — показати стікер RICOCHET! над двором.
+	if _action == "sticker" and _n == _frames - 2:
+		var fx = main.get("fx")
+		if fx != null:
+			fx.call("float_text", "РИКОШЕТ ×2!", Vector3(-2.5, 4.0, -15.0), Color(0.45, 0.9, 1.0), true)
 	if _n < _frames:
 		return false
 	var img := root.get_viewport().get_texture().get_image()

@@ -63,9 +63,25 @@ def pieces(rgba: Image.Image, min_frac: float = 0.002, close: int = 6) -> list[t
 
 def save_piece(rgba: Image.Image, box, dst: Path, max_px: int, pad: int = 6) -> None:
     x0, y0, x1, y1 = box
-    p = rgba.crop((max(0, x0 - pad), max(0, y0 - pad), x1 + pad, y1 + pad))
+    p = _drop_edge_scraps(rgba.crop((max(0, x0 - pad), max(0, y0 - pad), x1 + pad, y1 + pad)))
     p.thumbnail((max_px, max_px), Image.LANCZOS)
     p.save(dst, optimize=True)
+
+
+def _drop_edge_scraps(p: Image.Image) -> Image.Image:
+    """Прибирає дрібні шматки сусідніх об'єктів, що заскочили в кроп з краю."""
+    a = np.asarray(p).copy()
+    al = a[:, :, 3] > 20
+    lab, n = ndimage.label(al)
+    if n < 2:
+        return p
+    sizes = ndimage.sum(al, lab, range(1, n + 1))
+    big = sizes.max()
+    edge = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
+    for i in edge:
+        if sizes[i - 1] < big * 0.05:
+            a[lab == i, 3] = 0
+    return Image.fromarray(a, "RGBA")
 
 
 def main() -> None:
@@ -125,6 +141,8 @@ def main() -> None:
         save_piece(st, b, out / f"{name}.png", 512)
 
     for p in sorted(out.iterdir()):
+        if p.suffix not in (".png", ".jpg"):
+            continue
         print(f"{p.name:24} {Image.open(p).size} {p.stat().st_size // 1024} KB")
 
 
