@@ -74,7 +74,7 @@ assets:
       firmly gripping a huge chunky cartoon six-shooter revolver with a fat fluted cylinder, short thick barrel,
       scratched dark gunmetal steel and a wooden grip with a small silver star inlay; index finger resting
       along the frame, off the trigger; only the hand, glove cuff and revolver, cut cleanly at the forearm
-    views_override: {front: "straight side view from the left, barrel pointing left", side: "view from behind and above the hand, as the player sees it, barrel pointing away", back: "straight side view from the right, barrel pointing right"}
+    turn_views: ["left side view with the barrel pointing left", "view from behind and slightly above the hand, as the player sees it, barrel pointing away", "right side view with the barrel pointing right"]
     tris: 30000
     texture: 2048
     meshy_body: {geometry_resolution: 2k, texture_resolution: 4k}
