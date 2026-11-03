@@ -44,44 +44,64 @@ def turn_views(m: dict, a: dict) -> list[str]:
 
 
 def split_turnaround(path: Path, out_dir: Path, aid: str, names: list[str]) -> None:
-    """Ріже розворот на окремі квадратні картинки за проміжками фону між об'єктами."""
+    """Ріже розворот на окремі квадратні картинки.
+
+    Фон у FLUX — вертикальний градієнт, тож фон рахуємо для кожного рядка окремо (краї кадру).
+    Розрізи — у найпорожніших стовпцях біля 1/3 і 2/3 ширини, навіть якщо об'єкти майже торкаються.
+    """
     import numpy as np
     from PIL import Image
 
     im = Image.open(path).convert("RGB")
     arr = np.asarray(im).astype(np.int32)
     h, w = arr.shape[:2]
-    border = np.concatenate([arr[:6].reshape(-1, 3), arr[-6:].reshape(-1, 3), arr[:, :6].reshape(-1, 3), arr[:, -6:].reshape(-1, 3)])
-    bg = np.median(border, axis=0)
-    mask = np.abs(arr - bg).sum(axis=2) > 45
-    col = mask.mean(axis=0) > 0.01
-    runs, start = [], None
-    for x, v in enumerate(col):
-        if v and start is None:
-            start = x
-        elif not v and start is not None:
-            runs.append([start, x])
-            start = None
-    if start is not None:
-        runs.append([start, w])
-    merged: list = []
-    for r in runs:
-        if merged and r[0] - merged[-1][1] < 0.012 * w:
-            merged[-1][1] = r[1]
-        else:
-            merged.append(r)
-    merged = [r for r in merged if r[1] - r[0] > 0.04 * w]
+    e = max(4, w // 40)
+    edges = np.concatenate([arr[:, :e], arr[:, -e:]], axis=1)
+    bg_row = np.median(edges, axis=1)  # (h, 3)
+    mask = np.abs(arr - bg_row[:, None, :]).sum(axis=2) > 48
+    occ = np.convolve(mask.mean(axis=0), np.ones(15) / 15, mode="same")
     n = len(names)
-    if len(merged) != n:
-        merged = [[round(i * w / n), round((i + 1) * w / n)] for i in range(n)]
-    color = tuple(int(c) for c in bg)
-    for (x0, x1), name in zip(merged, names):
-        rows = np.where(mask[:, x0:x1].mean(axis=1) > 0.005)[0]
+    cuts = []
+    for k in range(1, n):
+        c = k * w / n
+        lo, hi = int(c - 0.12 * w), int(c + 0.12 * w)
+        cuts.append(lo + int(np.argmin(occ[lo:hi])))
+    bounds = [0, *cuts, w]
+    for i, name in enumerate(names):
+        x0, x1 = bounds[i], bounds[i + 1]
+        cols = np.where(occ[x0:x1] > 0.01)[0]
+        if len(cols):
+            x0, x1 = x0 + int(cols[0]), x0 + int(cols[-1]) + 1
+        rows = np.where(mask[:, x0:x1].mean(axis=1) > 0.01)[0]
         y0, y1 = (int(rows[0]), int(rows[-1]) + 1) if len(rows) else (0, h)
         side = int(max(x1 - x0, y1 - y0) * 1.16)
+        color = tuple(int(c) for c in np.median(bg_row[y0:y1], axis=0))
+        crop = im.crop((x0, y0, x1, y1))
+        crop = _keep_main_blob(crop, mask[y0:y1, x0:x1], color)
         tile = Image.new("RGB", (side, side), color)
-        tile.paste(im.crop((x0, y0, x1, y1)), ((side - (x1 - x0)) // 2, (side - (y1 - y0)) // 2))
+        tile.paste(crop, ((side - (x1 - x0)) // 2, (side - (y1 - y0)) // 2))
         tile.save(out_dir / f"{aid}_{name}.png")
+
+
+def _keep_main_blob(crop, mask, color):
+    """Зафарбовує фоном шматки сусідніх видів, що заскочили в панель (лишає найбільшу зв'язну пляму)."""
+    try:
+        import numpy as np
+        from scipy import ndimage
+    except ImportError:
+        return crop
+    m = ndimage.binary_closing(mask, iterations=3)
+    lab, n = ndimage.label(m)
+    if n < 2:
+        return crop
+    sizes = ndimage.sum(m, lab, range(1, n + 1))
+    keep = 1 + int(np.argmax(sizes))
+    stray = (lab != keep) & (lab != 0)
+    stray = ndimage.binary_dilation(stray, iterations=4) & (lab != keep)
+    a = np.asarray(crop).copy()
+    a[stray] = color
+    from PIL import Image
+    return Image.fromarray(a)
 
 
 def _data_url(img, fmt: str = "JPEG", min_side: int = 0) -> str:
@@ -220,11 +240,19 @@ def main() -> None:
     ap.add_argument("--group", help="група: hero, throwable, target, env, 2d")
     ap.add_argument("--force", action="store_true", help="перегенерувати навіть якщо є в кеші")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--resplit", action="store_true", help="лише перенарізати готові розвороти, без генерації")
     ap.add_argument("--jobs", type=int, default=4)
     args = ap.parse_args()
 
     m = load_manifest(args.level)
     items = select_assets(m, args.only, args.group)
+    if args.resplit:
+        for a in items:
+            t = existing(m["_gen"] / "refs", a["id"], "turn")
+            if t:
+                split_turnaround(t, m["_gen"] / "refs", a["id"], m["meshy"]["M"]["views"])
+                print(f"✂ {a['id']}")
+        return
     if args.dry_run:
         n, usd = 0, 0.0
         for a in items:
