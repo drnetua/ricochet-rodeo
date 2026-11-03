@@ -317,7 +317,9 @@ assets:
     name: Двері-крила
     group: env
     method: S
-    prompt: a pair of western saloon batwing swinging doors with weathered wooden slats and iron hinges
+    prompt: >-
+      a pair of short waist-high western saloon batwing half doors with louvered wooden slats and a curved
+      scalloped top edge, hanging on iron spring hinges, open space above and below the doors, weathered wood
     tris: 1000
     texture: 1024
     size: 1.8
