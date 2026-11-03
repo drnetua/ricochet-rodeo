@@ -34,6 +34,41 @@ func setup_bottle(color: Color) -> void:
 	_make_shape(Vector3(0.22 * s, 0.56 * s, 0.22 * s), _center)
 
 
+## Пляшка з моделі Meshy: форма й етикетка з моделі, скло — прозорий матеріал Godot.
+func setup_bottle_model(scene: PackedScene, color: Color, outline: Material = null) -> void:
+	kind = "bottle"
+	points = 15
+	label = "Пляшка"
+	respawn_time = 6.0
+	glass_color = color
+	_visual = scene.instantiate() as Node3D
+	add_child(_visual)
+	var aabb := AABB()
+	var first := true
+	for n in _visual.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		var src := mi.get_active_material(0) as BaseMaterial3D
+		var g := StandardMaterial3D.new()
+		if src != null:
+			g.albedo_texture = src.albedo_texture
+			g.normal_enabled = src.normal_enabled
+			g.normal_texture = src.normal_texture
+		g.albedo_color = Color(1.0, 1.0, 1.0, color.a)
+		g.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+		g.roughness = 0.08
+		g.metallic_specular = 1.0
+		g.rim_enabled = true
+		g.rim = 0.6
+		g.rim_tint = 0.3
+		mi.material_override = g
+		mi.material_overlay = outline
+		var box := _visual.transform * mi.transform * mi.get_aabb()
+		aabb = box if first else aabb.merge(box)
+		first = false
+	_center = aabb.get_center()
+	_make_shape(aabb.size, _center)
+
+
 func setup_window(pane: Vector2) -> void:
 	kind = "window"
 	points = 20

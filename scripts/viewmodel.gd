@@ -17,6 +17,18 @@ const LEFT_HIDDEN := Vector3(-0.38, -0.55, 0.3)
 const LEFT_ON_FOREND := Vector3(0.0, -0.085, -0.42)
 const LEFT_AT_CYLINDER := Vector3(-0.08, -0.05, -0.06)
 const LEFT_AT_GATE := Vector3(0.06, -0.06, -0.06)
+## Моделі рук з конвеєра асетів (Meshy). Без них — заглушки з примітивів.
+const HAND_REVOLVER := "res://assets/models/01/hand_revolver.glb"
+const HAND_LEFT := "res://assets/models/01/hand_left.glb"
+## Модель: ствол уздовж −X і трохи вгору → повертаємо стволом на −Z і вирівнюємо.
+const REVOLVER_YAW := -90.0
+const REVOLVER_PITCH := -15.0
+const REVOLVER_SCALE := 1.3
+const REVOLVER_OFFSET := Vector3(0.03, 0.0, 0.12)
+const REVOLVER_MUZZLE := Vector3(-0.295, 0.169, -0.027)
+## Окреме світло лише для руки: шар 20 у моделей рук і cull_mask світла.
+const HERO_LAYER := 1 << 19
+const OUTLINE_SHADER := "res://assets/shaders/outline.gdshader"
 
 var weapon: WeaponData
 
@@ -42,6 +54,12 @@ var _lever_tween: Tween
 
 var _glove_mat: StandardMaterial3D
 var _sleeve_mat: StandardMaterial3D
+var _arm_prims: Node3D
+var _left_prims: Node3D
+var _left_model: Node3D
+var _hero_outline: ShaderMaterial
+## true — револьвер з моделі (рука в моделі, тож трюк і рукав інші).
+var _model_mode: bool = false
 
 
 func _ready() -> void:
@@ -52,10 +70,19 @@ func _ready() -> void:
 	add_child(_aim)
 	_gun_pivot = Node3D.new()
 	_aim.add_child(_gun_pivot)
+	_hero_outline = ShaderMaterial.new()
+	_hero_outline.shader = load(OUTLINE_SHADER)
+	_hero_outline.set_shader_parameter("thickness", 0.006)
+	_arm_prims = Node3D.new()
+	_aim.add_child(_arm_prims)
 	_build_right_arm()
 	_left = Node3D.new()
 	_aim.add_child(_left)
+	_left_prims = Node3D.new()
+	_left.add_child(_left_prims)
 	_build_left_arm()
+	_build_left_model()
+	_hero_light()
 	_aim_q = Basis.looking_at(Vector3(0.0, 0.25, -1.0).normalized(), Vector3.UP).get_rotation_quaternion()
 
 
@@ -78,10 +105,15 @@ func set_weapon(w: WeaponData) -> void:
 	_gun = Node3D.new()
 	_gun_pivot.add_child(_gun)
 	_lever = null
+	_model_mode = false
 	if w.id == "lever_rifle":
 		_build_rifle()
-	else:
+	elif not _build_revolver_model():
 		_build_revolver()
+	_arm_prims.visible = not _model_mode
+	if _left_model != null:
+		_left_model.visible = not w.two_handed
+		_left_prims.visible = w.two_handed
 	_left.visible = w.two_handed
 	_left.position = LEFT_ON_FOREND if w.two_handed else LEFT_HIDDEN
 	# Анімація «дістав зброю»: ствол знизу пружинить у приціл.
@@ -202,6 +234,11 @@ func _play_trick() -> void:
 		# Гвинтівка: перекинути на плече і назад.
 		_trick_tween.tween_property(_gun_pivot, "rotation:z", 0.45, 0.25).set_trans(Tween.TRANS_SINE)
 		_trick_tween.tween_property(_gun_pivot, "rotation:z", 0.0, 0.35).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+	elif _model_mode:
+		# Рука з револьвером — одна модель, тож замість обертів на пальці — «показ»: підкинути ствол і повернути.
+		_trick_tween.tween_property(_gun_pivot, "rotation", Vector3(0.55, 0.0, 0.5), 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		_trick_tween.tween_property(_gun_pivot, "rotation", Vector3(0.2, 0.0, -0.35), 0.18).set_trans(Tween.TRANS_SINE)
+		_trick_tween.tween_property(_gun_pivot, "rotation", Vector3.ZERO, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	else:
 		# Револьвер: два оберти на пальці.
 		_trick_tween.tween_property(_gun_pivot, "rotation:x", -TAU * 2.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
@@ -237,15 +274,15 @@ func _hide_flash() -> void:
 # --- Моделі з примітивів (заглушки під майбутні моделі) ---
 
 func _build_right_arm() -> void:
-	Util.sphere(_aim, 0.075, Vector3(0.0, -0.065, 0.07), _glove_mat, Vector3(1.0, 0.95, 1.3))
-	Util.limb(_aim, Vector3(0.0, -0.08, 0.1), Vector3(0.01, -0.12, 0.22), 0.07, 0.085, _glove_mat)
-	Util.limb(_aim, Vector3(0.01, -0.11, 0.2), Vector3(0.06, -0.5, 0.85), 0.09, 0.115, _sleeve_mat)
+	Util.sphere(_arm_prims, 0.075, Vector3(0.0, -0.065, 0.07), _glove_mat, Vector3(1.0, 0.95, 1.3))
+	Util.limb(_arm_prims, Vector3(0.0, -0.08, 0.1), Vector3(0.01, -0.12, 0.22), 0.07, 0.085, _glove_mat)
+	Util.limb(_arm_prims, Vector3(0.01, -0.11, 0.2), Vector3(0.06, -0.5, 0.85), 0.09, 0.115, _sleeve_mat)
 
 
 func _build_left_arm() -> void:
-	Util.sphere(_left, 0.07, Vector3.ZERO, _glove_mat, Vector3(1.15, 0.85, 1.2))
-	Util.limb(_left, Vector3(0.0, -0.02, 0.05), Vector3(-0.02, -0.06, 0.16), 0.065, 0.08, _glove_mat)
-	Util.limb(_left, Vector3(-0.02, -0.05, 0.15), Vector3(-0.36, -0.5, 0.75), 0.085, 0.11, _sleeve_mat)
+	Util.sphere(_left_prims, 0.07, Vector3.ZERO, _glove_mat, Vector3(1.15, 0.85, 1.2))
+	Util.limb(_left_prims, Vector3(0.0, -0.02, 0.05), Vector3(-0.02, -0.06, 0.16), 0.065, 0.08, _glove_mat)
+	Util.limb(_left_prims, Vector3(-0.02, -0.05, 0.15), Vector3(-0.36, -0.5, 0.75), 0.085, 0.11, _sleeve_mat)
 
 
 func _build_revolver() -> void:
@@ -301,3 +338,47 @@ func _set_muzzle(pos: Vector3) -> void:
 	_flash_mesh.visible = false
 	_flash_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_muzzle.add_child(_flash_mesh)
+
+
+## Права рука з револьвером — одна модель Meshy. false — моделі нема.
+func _build_revolver_model() -> bool:
+	if not ResourceLoader.exists(HAND_REVOLVER):
+		return false
+	var model := (load(HAND_REVOLVER) as PackedScene).instantiate() as Node3D
+	var b := Basis(Vector3.RIGHT, deg_to_rad(REVOLVER_PITCH)) * Basis(Vector3.UP, deg_to_rad(REVOLVER_YAW))
+	model.transform = Transform3D(b.scaled(Vector3.ONE * REVOLVER_SCALE), REVOLVER_OFFSET)
+	_gun.add_child(model)
+	_hero_meshes(model)
+	_set_muzzle(model.transform * REVOLVER_MUZZLE)
+	_model_mode = true
+	return true
+
+
+## Ліва рука з набоєм для перезарядки револьвера.
+func _build_left_model() -> void:
+	if not ResourceLoader.exists(HAND_LEFT):
+		return
+	_left_model = (load(HAND_LEFT) as PackedScene).instantiate() as Node3D
+	_left_model.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(-35.0)).scaled(Vector3.ONE * 0.85), Vector3(-0.02, 0.0, 0.12))
+	_left.add_child(_left_model)
+	_hero_meshes(_left_model)
+
+
+## Моделі рук: шар для «геройського» світла і товстіший контур.
+func _hero_meshes(root: Node) -> void:
+	for n in root.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		mi.layers = 1 | HERO_LAYER
+		mi.material_overlay = _hero_outline
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+
+## Тепле світло зверху-зліва лише на руку: вона читається на будь-якому фоні.
+func _hero_light() -> void:
+	var l := OmniLight3D.new()
+	l.light_color = Color(1.0, 0.85, 0.65)
+	l.light_energy = 0.45
+	l.omni_range = 2.5
+	l.light_cull_mask = HERO_LAYER
+	l.position = Vector3(-0.45, 0.45, 0.25)
+	add_child(l)

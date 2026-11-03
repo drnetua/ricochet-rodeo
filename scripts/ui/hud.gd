@@ -20,6 +20,13 @@ var _fps: Label
 var _results: PanelContainer
 var _results_text: Label
 var _score: ScoreManager
+var _plaque: TextureRect
+var _bullets: HBoxContainer
+var _bullet_tex: Texture2D
+
+const PLAQUE := "res://assets/textures/01/hud_plaque.png"
+const BULLET := "res://assets/textures/01/hud_bullet.png"
+const WESTERN_FONT := "res://assets/fonts/Rye-Regular.ttf"
 
 
 func _ready() -> void:
@@ -28,21 +35,41 @@ func _ready() -> void:
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(_root)
+	# Дерев'яна табличка з мішечком грошей (з концепту), число — західним шрифтом.
+	if ResourceLoader.exists(PLAQUE):
+		_plaque = TextureRect.new()
+		_plaque.texture = load(PLAQUE)
+		_plaque.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_plaque.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		_plaque.size = Vector2(330.0, 101.0)
+		_plaque.position = Vector2(14.0, 10.0)
+		_plaque.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_root.add_child(_plaque)
 	_money = _label(40, Color(1.0, 0.85, 0.3))
 	_money.position = Vector2(28.0, 18.0)
+	if _plaque != null:
+		_money.add_theme_font_override("font", load(WESTERN_FONT))
+		_money.add_theme_font_size_override("font_size", 46)
+		_money.position = Vector2(118.0, 26.0)
 	_combo = _label(26, Color(0.45, 0.9, 1.0))
-	_combo.position = Vector2(30.0, 78.0)
+	_combo.position = Vector2(30.0, 118.0 if _plaque != null else 78.0)
 	_combo_bar = ProgressBar.new()
 	_combo_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_combo_bar.show_percentage = false
 	_combo_bar.min_value = 0.0
 	_combo_bar.max_value = 1.0
-	_combo_bar.position = Vector2(32.0, 118.0)
+	_combo_bar.position = Vector2(32.0, 158.0 if _plaque != null else 118.0)
 	_combo_bar.custom_minimum_size = Vector2(200.0, 8.0)
 	_combo_bar.visible = false
 	_root.add_child(_combo_bar)
 	_throws = _label(22, Color(1.0, 1.0, 1.0))
-	_throws.position = Vector2(30.0, 136.0)
+	_throws.position = Vector2(30.0, 176.0 if _plaque != null else 136.0)
+	if ResourceLoader.exists(BULLET):
+		_bullet_tex = load(BULLET)
+		_bullets = HBoxContainer.new()
+		_bullets.add_theme_constant_override("separation", 4)
+		_bullets.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_root.add_child(_bullets)
 	_weapon = _label(24, Color(1.0, 1.0, 1.0))
 	_ammo = _label(30, Color(1.0, 0.85, 0.3))
 	for l in [_weapon, _ammo]:
@@ -84,6 +111,10 @@ func _process(_delta: float) -> void:
 	var s := _root.size
 	_weapon.position = Vector2(s.x - 548.0, s.y - 104.0)
 	_ammo.position = Vector2(s.x - 548.0, s.y - 66.0)
+	if _bullets != null:
+		_bullets.position = Vector2(s.x - 24.0 - _bullets.size.x, s.y - 78.0)
+		_ammo.position.y = s.y - 120.0
+		_weapon.position.y = s.y - 156.0
 	_help.position = Vector2(28.0, s.y - 44.0)
 	if _fps != null:
 		_fps.text = "%d FPS" % Engine.get_frames_per_second()
@@ -127,6 +158,23 @@ func _on_ammo(ammo: int, mag: int, reloading: bool) -> void:
 	elif ammo == 0:
 		dots = "R — перезарядка  " + dots
 	_ammo.text = dots
+	if _bullets != null:
+		_ammo.text = "ПЕРЕЗАРЯДКА…" if reloading else ("R — перезарядка" if ammo == 0 else "")
+		while _bullets.get_child_count() < mag:
+			var tr := TextureRect.new()
+			tr.texture = _bullet_tex
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			tr.custom_minimum_size = Vector2(26.0, 54.0)
+			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_bullets.add_child(tr)
+		while _bullets.get_child_count() > mag:
+			var last := _bullets.get_child(_bullets.get_child_count() - 1)
+			_bullets.remove_child(last)
+			last.queue_free()
+		for i in mag:
+			(_bullets.get_child(i) as TextureRect).modulate = Color(1, 1, 1, 1.0 if i < ammo else 0.22)
+		_bullets.reset_size()
 
 
 func _on_weapon(display_name: String) -> void:

@@ -6,11 +6,11 @@ extends SceneTree
 ## out.png  — куди зберегти (за замовчуванням screenshot.png)
 ## scene    — сцена (res://scenes/main.tscn)
 ## frames   — скільки кадрів чекати перед знімком (90)
-## throw    — "throw": підкинути предмет і зняти його в польоті
+## action   — "throw": підкинути предмет і зняти його в польоті; "reload": зняти перезарядку
 
 var _out := "screenshot.png"
 var _frames := 90
-var _throw := false
+var _action := ""
 var _n := 0
 
 
@@ -23,17 +23,23 @@ func _initialize() -> void:
 		scene_path = args[1]
 	if args.size() > 2:
 		_frames = int(args[2])
-	_throw = args.size() > 3 and args[3] == "throw"
+	_action = args[3] if args.size() > 3 else ""
 	var packed := load(scene_path) as PackedScene
 	root.add_child(packed.instantiate())
 
 
 func _process(_delta: float) -> bool:
 	_n += 1
-	if _throw and _n == _frames - 40:
-		var main := root.get_child(root.get_child_count() - 1)
-		if main.has_method("_try_throw"):
-			main.call("_try_throw")
+	var main := root.get_child(root.get_child_count() - 1)
+	if _action == "throw" and _n == _frames - 40 and main.has_method("_try_throw"):
+		main.call("_try_throw")
+	# "reload:N" — почати перезарядку за N кадрів до знімка (за замовчуванням 2).
+	var reload_at := _frames - (int(_action.get_slice(":", 1)) if _action.contains(":") else 2)
+	if _action.begins_with("reload") and _n == reload_at:
+		var player = main.get("player")
+		if player != null:
+			player.ammo[player.weapon.id] = 0
+			player.call("_start_reload")
 	if _n < _frames:
 		return false
 	var img := root.get_viewport().get_texture().get_image()

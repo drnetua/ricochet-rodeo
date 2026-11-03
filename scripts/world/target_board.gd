@@ -4,8 +4,11 @@ extends StaticBody3D
 const Util = preload("res://scripts/util.gd")
 
 const RADIUS := 0.9
+## Модель мішені масштабується так, щоб радіус диска був RADIUS.
+const MODEL_SCALE := 0.8
 
 var _disc: Node3D
+var _kick: float = -0.25
 
 
 func setup() -> void:
@@ -24,6 +27,28 @@ func setup() -> void:
 	var c := CylinderShape3D.new()
 	c.radius = RADIUS
 	c.height = 0.1
+	cs.shape = c
+	cs.rotation_degrees = Vector3(90, 0, 0)
+	add_child(cs)
+	add_to_group("scorable")
+
+## Мішень з моделі Meshy: вузол — центр диска; модель гойдається від основи стовпа.
+func setup_model(scene: PackedScene, disc_height: float, outline: Material = null) -> void:
+	collision_layer = 4
+	collision_mask = 0
+	_kick = -0.1
+	_disc = Node3D.new()
+	_disc.position = Vector3(0.0, -disc_height * MODEL_SCALE, 0.0)
+	add_child(_disc)
+	var model := scene.instantiate() as Node3D
+	model.scale = Vector3.ONE * MODEL_SCALE
+	_disc.add_child(model)
+	for n in model.find_children("*", "MeshInstance3D", true, false):
+		(n as MeshInstance3D).material_overlay = outline
+	var cs := CollisionShape3D.new()
+	var c := CylinderShape3D.new()
+	c.radius = RADIUS
+	c.height = 0.16
 	cs.shape = c
 	cs.rotation_degrees = Vector3(90, 0, 0)
 	add_child(cs)
@@ -51,7 +76,7 @@ func on_bullet_hit(hit_pos: Vector3, _dir: Vector3, _normal: Vector3, _impulse: 
 	elif d < 0.68:
 		pts = 20
 	var tw := create_tween()
-	tw.tween_property(_disc, "rotation:x", -0.25, 0.05)
+	tw.tween_property(_disc, "rotation:x", _kick, 0.05)
 	tw.tween_property(_disc, "rotation:x", 0.0, 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	var sound := "target_bullseye" if pts >= 60 else "hit_wood"
 	return {"surface": "wood", "points": pts, "label": label, "sound": sound}

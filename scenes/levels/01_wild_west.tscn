@@ -1,0 +1,325 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/wild_west.gd" id="1_kpcep"]
+[ext_resource type="PackedScene" path="res://assets/models/01/saloon_wall.glb" id="2_7dfhh"]
+[ext_resource type="PackedScene" path="res://assets/models/01/window_frame.glb" id="3_xo7bk"]
+[ext_resource type="PackedScene" path="res://assets/models/01/swing_doors.glb" id="4_6och4"]
+[ext_resource type="PackedScene" path="res://assets/models/01/saloon_sign.glb" id="5_8bldx"]
+[ext_resource type="FontFile" path="res://assets/fonts/Rye-Regular.ttf" id="6_e4ra4"]
+[ext_resource type="PackedScene" path="res://assets/models/01/lantern.glb" id="7_15oar"]
+[ext_resource type="PackedScene" path="res://assets/models/01/barrel.glb" id="8_va4py"]
+[ext_resource type="PackedScene" path="res://assets/models/01/wagon_wheel.glb" id="9_xrulb"]
+[ext_resource type="PackedScene" path="res://assets/models/01/crate.glb" id="10_cc8ao"]
+[ext_resource type="PackedScene" path="res://assets/models/01/fence_section.glb" id="11_5ay4h"]
+[ext_resource type="PackedScene" path="res://assets/models/01/rope_coil.glb" id="12_0pux5"]
+[ext_resource type="PackedScene" path="res://assets/models/01/rocks.glb" id="13_p0lqp"]
+[ext_resource type="PackedScene" path="res://assets/models/01/cactus.glb" id="14_8nfga"]
+[ext_resource type="PackedScene" path="res://assets/models/01/tumbleweed.glb" id="15_sfgin"]
+[ext_resource type="PackedScene" path="res://assets/models/01/porch.glb" id="16_8lj5y"]
+[ext_resource type="PackedScene" path="res://assets/models/01/gong_frame.glb" id="17_2wm8e"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rx1wu"]
+albedo_color = Color(0.06, 0.035, 0.02, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yow5c"]
+size = Vector3(0.08, 2.75, 2.1)
+
+[node name="WildWest" type="Node3D" unique_id=1882507323]
+script = ExtResource("1_kpcep")
+
+[node name="Props" type="Node3D" parent="." unique_id=312575368]
+
+[node name="saloon_wall_1" type="Node3D" parent="Props" unique_id=1517520161 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -11)
+
+[node name="saloon_wall_2" type="Node3D" parent="Props" unique_id=1419049899 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -15)
+
+[node name="saloon_wall_3" type="Node3D" parent="Props" unique_id=72759293 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -19)
+
+[node name="saloon_wall_4" type="Node3D" parent="Props" unique_id=2013830996 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -23)
+
+[node name="saloon_wall_5" type="Node3D" parent="Props" unique_id=1298463108 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -27)
+
+[node name="saloon_wall_6" type="Node3D" parent="Props" unique_id=104231931 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 0, -31)
+
+[node name="saloon_wall_7" type="Node3D" parent="Props" unique_id=366835971 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -11)
+
+[node name="saloon_wall_8" type="Node3D" parent="Props" unique_id=1659982757 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -15)
+
+[node name="saloon_wall_9" type="Node3D" parent="Props" unique_id=1535755102 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -19)
+
+[node name="saloon_wall_10" type="Node3D" parent="Props" unique_id=1168420354 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -23)
+
+[node name="saloon_wall_11" type="Node3D" parent="Props" unique_id=195219972 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -27)
+
+[node name="saloon_wall_12" type="Node3D" parent="Props" unique_id=1516522427 instance=ExtResource("2_7dfhh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.8, 3.424, -31)
+
+[node name="window_frame_1" type="Node3D" parent="Props" unique_id=1962486227 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 1.75, -11)
+
+[node name="window_frame_2" type="Node3D" parent="Props" unique_id=386031438 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 1.75, -15)
+
+[node name="window_frame_3" type="Node3D" parent="Props" unique_id=1443380498 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 1.75, -23)
+
+[node name="window_frame_4" type="Node3D" parent="Props" unique_id=1806527038 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 1.75, -27)
+
+[node name="window_frame_5" type="Node3D" parent="Props" unique_id=1086820050 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 5.15, -11)
+
+[node name="window_frame_6" type="Node3D" parent="Props" unique_id=2123775738 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 5.15, -19)
+
+[node name="window_frame_7" type="Node3D" parent="Props" unique_id=1678028160 instance=ExtResource("3_xo7bk")]
+transform = Transform3D(-4.152582e-08, 0, -0.95, 0, 0.95, 0, 0.95, 0, -4.152582e-08, 7.425, 5.15, -27)
+
+[node name="swing_doors_1" type="Node3D" parent="Props" unique_id=926975973 instance=ExtResource("4_6och4")]
+transform = Transform3D(-4.5896957e-08, 0, -1.05, 0, 1.05, 0, 1.05, 0, -4.5896957e-08, 7.405, 0.45, -19)
+
+[node name="doorway" type="MeshInstance3D" parent="Props" unique_id=11273912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.505, 1.38, -19)
+material_override = SubResource("StandardMaterial3D_rx1wu")
+mesh = SubResource("BoxMesh_yow5c")
+
+[node name="saloon_sign_1" type="Node3D" parent="Props" unique_id=721847510 instance=ExtResource("5_8bldx")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.275, 7.398, -13)
+
+[node name="SaloonText" type="Label3D" parent="Props/saloon_sign_1" unique_id=128300776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0.23)
+pixel_size = 0.0085
+shaded = true
+double_sided = false
+modulate = Color(1, 0.9, 0.68, 1)
+outline_modulate = Color(0.35, 0.08, 0.05, 1)
+text = "SALOON"
+font = ExtResource("6_e4ra4")
+font_size = 105
+outline_size = 28
+
+[node name="lantern_1" type="Node3D" parent="Props" unique_id=1907339999 instance=ExtResource("7_15oar")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.355, 3, -9.4)
+
+[node name="lantern_2" type="Node3D" parent="Props" unique_id=627260611 instance=ExtResource("7_15oar")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.355, 3, -21)
+
+[node name="barrel_1" type="Node3D" parent="Props" unique_id=1612468975 instance=ExtResource("8_va4py")]
+transform = Transform3D(0.9848077, 0, 0.17364818, 0, 1, 0, -0.17364818, 0, 0.9848077, 6.35, 0, -10)
+
+[node name="barrel_2" type="Node3D" parent="Props" unique_id=1502423279 instance=ExtResource("8_va4py")]
+transform = Transform3D(0.8609924, 0, -0.40148735, 0, 0.95, 0, 0.40148735, 0, 0.8609924, 6.55, 0, -11.35)
+
+[node name="barrel_3" type="Node3D" parent="Props" unique_id=1488643722 instance=ExtResource("8_va4py")]
+transform = Transform3D(0.9093266, 0, 0.525, 0, 1.05, 0, -0.525, 0, 0.9093266, 6.6, 0, -6)
+
+[node name="barrel_4" type="Node3D" parent="Props" unique_id=1211609726 instance=ExtResource("8_va4py")]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 6.2, 0, -25.2)
+
+[node name="wagon_wheel_1" type="Node3D" parent="Props" unique_id=1222143856 instance=ExtResource("9_xrulb")]
+transform = Transform3D(-4.7199116e-08, 0.2098899, -1.0797899, 9.174579e-09, 1.0797899, 0.2098899, 1.1, 0, -4.8082526e-08, 7.08, 0, -16.3)
+
+[node name="crate_1" type="Node3D" parent="Props" unique_id=2039038431 instance=ExtResource("10_cc8ao")]
+transform = Transform3D(0.815677, 0, -0.38035643, 0, 0.9, 0, 0.38035643, 0, 0.815677, 5.9, 0.45, -14.6)
+
+[node name="crate_2" type="Node3D" parent="Props" unique_id=1041802621 instance=ExtResource("10_cc8ao")]
+transform = Transform3D(0.63579595, 0, 0.1351426, 0, 0.65, 0, -0.1351426, 0, 0.63579595, 5.95, 1.22, -14.7)
+
+[node name="fence_section_1" type="Node3D" parent="Props" unique_id=1637086709 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -4.5)
+
+[node name="fence_section_2" type="Node3D" parent="Props" unique_id=189769889 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -7.5)
+
+[node name="fence_section_3" type="Node3D" parent="Props" unique_id=1417240572 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -10.5)
+
+[node name="fence_section_4" type="Node3D" parent="Props" unique_id=1337169995 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -13.5)
+
+[node name="fence_section_5" type="Node3D" parent="Props" unique_id=1148255331 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -16.5)
+
+[node name="fence_section_6" type="Node3D" parent="Props" unique_id=1348183450 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -19.5)
+
+[node name="fence_section_7" type="Node3D" parent="Props" unique_id=1153822397 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -22.5)
+
+[node name="fence_section_8" type="Node3D" parent="Props" unique_id=1185375474 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -25.5)
+
+[node name="fence_section_9" type="Node3D" parent="Props" unique_id=2136886470 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -28.5)
+
+[node name="fence_section_10" type="Node3D" parent="Props" unique_id=1255636539 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.6, 0, -31.5)
+
+[node name="fence_section_11" type="Node3D" parent="Props" unique_id=2084727997 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.1, 0, -33.2)
+
+[node name="fence_section_12" type="Node3D" parent="Props" unique_id=1238142039 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 0, -33.2)
+
+[node name="fence_section_13" type="Node3D" parent="Props" unique_id=1246082156 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0, -33.2)
+
+[node name="fence_section_14" type="Node3D" parent="Props" unique_id=787070913 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9, 0, -33.2)
+
+[node name="fence_section_15" type="Node3D" parent="Props" unique_id=983645929 instance=ExtResource("11_5ay4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9, 0, -33.2)
+
+[node name="rope_coil_1" type="Node3D" parent="Props" unique_id=57435205 instance=ExtResource("12_0pux5")]
+transform = Transform3D(-4.8082526e-08, 0, 1.1, 0, 1.1, 0, -1.1, 0, -4.8082526e-08, -7.38, 1.05, -6.4)
+
+[node name="crate_3" type="Node3D" parent="Props" unique_id=512866794 instance=ExtResource("10_cc8ao")]
+transform = Transform3D(1.1888207, 0, 0.38627124, 0, 1.25, 0, -0.38627124, 0, 1.1888207, -5, 0.62, -4.2)
+
+[node name="rocks_1" type="Node3D" parent="Props" unique_id=336664436 instance=ExtResource("13_p0lqp")]
+transform = Transform3D(0.84572333, 0, 0.3078181, 0, 0.9, 0, -0.3078181, 0, 0.84572333, -3.6, 0, -6.2)
+
+[node name="rocks_2" type="Node3D" parent="Props" unique_id=867665336 instance=ExtResource("13_p0lqp")]
+transform = Transform3D(0.42132446, 0, -0.35353318, 0, 0.55, 0, 0.35353318, 0, 0.42132446, 2.4, 0, -6.6)
+
+[node name="rocks_3" type="Node3D" parent="Props" unique_id=260519865 instance=ExtResource("13_p0lqp")]
+transform = Transform3D(0.23941411, 0, 0.6577848, 0, 0.7, 0, -0.6577848, 0, 0.23941411, -1.4, 0, -21.5)
+
+[node name="cactus_1" type="Node3D" parent="Props" unique_id=604522055 instance=ExtResource("14_8nfga")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 0.9, 0, -28)
+
+[node name="cactus_2" type="Node3D" parent="Props" unique_id=756488987 instance=ExtResource("14_8nfga")]
+transform = Transform3D(0.7361216, 0, 0.425, 0, 0.85, 0, -0.425, 0, 0.7361216, -10.8, 0, -24)
+
+[node name="cactus_3" type="Node3D" parent="Props" unique_id=431538728 instance=ExtResource("14_8nfga")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -4, 0, -48)
+
+[node name="tumbleweed_1" type="Node3D" parent="Props" unique_id=1681020520 instance=ExtResource("15_sfgin")]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, -6, 0.5, -12.5)
+
+[node name="porch_1" type="Node3D" parent="Props" unique_id=1972316600 instance=ExtResource("16_8lj5y")]
+transform = Transform3D(0.45053363, 0, 0.31546706, 0, 0.55, 0, -0.31546706, 0, 0.45053363, -13.5, 0, -42)
+
+[node name="gong_frame_1" type="Node3D" parent="Props" unique_id=1212435882 instance=ExtResource("17_2wm8e")]
+transform = Transform3D(2.1190743, 0, 1.1267319, 0, 2.4, 0, -1.1267319, 0, 2.1190743, -3.2, 0, -20)
+
+[node name="gong_frame_2" type="Node3D" parent="Props" unique_id=975419247 instance=ExtResource("17_2wm8e")]
+transform = Transform3D(2.078461, 0, -1.2, 0, 2.4, 0, 1.2, 0, 2.078461, 2, 0, -25)
+
+[node name="Spawns" type="Node3D" parent="." unique_id=1722483458]
+
+[node name="window_1" type="Marker3D" parent="Spawns" unique_id=1431910603]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 1.75, -11)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_2" type="Marker3D" parent="Spawns" unique_id=1962162605]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 1.75, -15)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_3" type="Marker3D" parent="Spawns" unique_id=1096192266]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 1.75, -23)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_4" type="Marker3D" parent="Spawns" unique_id=921144089]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 1.75, -27)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_5" type="Marker3D" parent="Spawns" unique_id=1744664205]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 5.15, -11)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_6" type="Marker3D" parent="Spawns" unique_id=215274743]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 5.15, -19)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="window_7" type="Marker3D" parent="Spawns" unique_id=1732451044]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.445, 5.15, -27)
+metadata/kind = "window"
+metadata/pane = Vector2(1.35, 1.5)
+
+[node name="bottle_1" type="Marker3D" parent="Spawns" unique_id=1770338747]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, -7.6, 1.66, -11)
+metadata/kind = "bottle"
+metadata/model = "bottle_brown"
+
+[node name="bottle_2" type="Marker3D" parent="Spawns" unique_id=1091809802]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, -7.6, 1.66, -13.5)
+metadata/kind = "bottle"
+metadata/model = "bottle_clear"
+
+[node name="bottle_3" type="Marker3D" parent="Spawns" unique_id=2016312728]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, -7.6, 1.66, -16)
+metadata/kind = "bottle"
+metadata/model = "bottle_green"
+
+[node name="bottle_4" type="Marker3D" parent="Spawns" unique_id=1380507734]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, -7.6, 1.66, -18.5)
+metadata/kind = "bottle"
+metadata/model = "bottle_brown"
+
+[node name="bottle_5" type="Marker3D" parent="Spawns" unique_id=93989600]
+transform = Transform3D(0.85, 0, 0, 0, 0.85, 0, 0, 0, 0.85, -7.6, 1.66, -21)
+metadata/kind = "bottle"
+metadata/model = "bottle_clear"
+
+[node name="bottle_6" type="Marker3D" parent="Spawns" unique_id=1575156272]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, -5, 1.66, -33.2)
+metadata/kind = "bottle"
+metadata/model = "bottle_green"
+
+[node name="bottle_7" type="Marker3D" parent="Spawns" unique_id=392884702]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, -2, 1.66, -33.2)
+metadata/kind = "bottle"
+metadata/model = "bottle_brown"
+
+[node name="bottle_8" type="Marker3D" parent="Spawns" unique_id=92827876]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 1, 1.66, -33.2)
+metadata/kind = "bottle"
+metadata/model = "bottle_clear"
+
+[node name="bottle_9" type="Marker3D" parent="Spawns" unique_id=366851740]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 4, 1.66, -33.2)
+metadata/kind = "bottle"
+metadata/model = "bottle_green"
+
+[node name="civilian_1" type="Marker3D" parent="Spawns" unique_id=249542497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.5)
+metadata/kind = "civilian"
+metadata/walk = 6.0
+
+[node name="target_1" type="Marker3D" parent="Spawns" unique_id=178665140]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -5, 1.42, -13)
+metadata/kind = "target"
+metadata/disc_height = 1.77
+
+[node name="target_2" type="Marker3D" parent="Spawns" unique_id=1531564152]
+transform = Transform3D(1.2074072, 0, -0.32352382, 0, 1.25, 0, 0.32352382, 0, 1.2074072, 4.6, 1.78, -18)
+metadata/kind = "target"
+metadata/disc_height = 1.77
+
+[node name="gong_1" type="Marker3D" parent="Spawns" unique_id=368762813]
+transform = Transform3D(0.88294756, 0, 0.46947157, 0, 1, 0, -0.46947157, 0, 0.88294756, -3.2, 2.25, -20)
+metadata/kind = "gong"
+metadata/radius = 0.95
+
+[node name="gong_2" type="Marker3D" parent="Spawns" unique_id=368335698]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 2, 2.25, -25)
+metadata/kind = "gong"
+metadata/radius = 0.95

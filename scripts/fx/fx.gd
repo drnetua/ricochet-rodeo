@@ -34,8 +34,24 @@ func tracer(a: Vector3, b: Vector3, color: Color, width: float = 0.045) -> void:
 	tw.tween_callback(mi.queue_free)
 
 
+## Стікери з концепту (FLUX): для рикошету й штрафу замість простого тексту.
+const STICKERS := {"РИКОШЕТ": "res://assets/textures/01/sticker_ricochet.png", "ЦИВІЛЬНИЙ": "res://assets/textures/01/sticker_oops.png"}
+
+
 ## Плаваючий напис над точкою влучання («+45$», «РИКОШЕТ ×2!»).
 func float_text(text: String, pos: Vector3, color: Color, big: bool = false) -> void:
+	for key in STICKERS:
+		if text.contains(key) and ResourceLoader.exists(STICKERS[key]):
+			_sticker(load(STICKERS[key]), pos)
+			# Під стікером лишається коротка частина напису (×2, −100$).
+			var rest := text.get_slice("\n", 0).replace("РИКОШЕТ", "").replace("!", "").strip_edges()
+			if key == "ЦИВІЛЬНИЙ":
+				rest = text.get_slice(" ", 0)
+			if rest.is_empty():
+				return
+			text = rest
+			pos += Vector3(0.0, -0.9, 0.0)
+			break
 	var l := Label3D.new()
 	l.text = text
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -93,3 +109,24 @@ func impact(pos: Vector3, normal: Vector3, surface: String) -> void:
 
 func confetti(pos: Vector3) -> void:
 	debris(pos, CONFETTI, 18, 0.08, Vector3(0.0, 2.0, 0.0))
+
+
+## Стікер-картинка: вискакує з пружиною, підлітає і зникає.
+func _sticker(tex: Texture2D, pos: Vector3) -> void:
+	var sp := Sprite3D.new()
+	sp.texture = tex
+	sp.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sp.no_depth_test = true
+	sp.render_priority = 21
+	sp.pixel_size = 2.4 / float(tex.get_width())
+	sp.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+	sp.shaded = false
+	add_child(sp)
+	sp.global_position = pos + Vector3(0.0, 0.9, 0.0)
+	sp.scale = Vector3.ONE * 0.2
+	sp.rotation.z = randf_range(-0.2, 0.2)
+	var tw := sp.create_tween()
+	tw.tween_property(sp, "scale", Vector3.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(sp, "global_position", sp.global_position + Vector3(0.0, 1.2, 0.0), 1.1).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(sp, "modulate:a", 0.0, 0.35).set_delay(0.8)
+	tw.tween_callback(sp.queue_free)

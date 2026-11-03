@@ -248,8 +248,8 @@ assets:
     size: 2.2
     fit: width
     pivot: bottom
-    collision: convex
-    notes: Пластина — метал у Godot (MetalPlate)
+    collision: none
+    notes: Пластина — метал у Godot (MetalPlate); без колізії, бо опукла оболонка рами закрила б пластину
 
   - id: window_frame
     name: Рама вікна

@@ -2,7 +2,7 @@ extends Node3D
 ## Точка входу прототипу: збирає рівень, гравця, кидалку, очки й HUD,
 ## тримає ритм рівня (запас кидків), slow-mo і табло в кінці.
 
-const LevelBuilder = preload("res://scripts/world/level_builder.gd")
+const LEVEL_SCENE := "res://scenes/levels/01_wild_west.tscn"
 const Thrower = preload("res://scripts/thrower.gd")
 const Player = preload("res://scripts/player.gd")
 const ScoreManager = preload("res://scripts/score_manager.gd")
@@ -44,7 +44,7 @@ func _ready() -> void:
 	add_child(sfx)
 	score = ScoreManager.new()
 	add_child(score)
-	LevelBuilder.build(self)
+	add_child((load(LEVEL_SCENE) as PackedScene).instantiate())
 	thrower = Thrower.new()
 	add_child(thrower)
 	player = Player.new()

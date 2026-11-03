@@ -1,0 +1,73 @@
+{"t": "2026-11-03 19:17:04", "service": "openrouter", "asset": "hand_revolver", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:17:05", "service": "openrouter", "asset": "crate", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:17:07", "service": "openrouter", "asset": "bullskull", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:17:33", "service": "openrouter", "asset": "hand_revolver", "what": "flux front 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:13", "service": "openrouter", "asset": "crate", "what": "flux front 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:15", "service": "openrouter", "asset": "hand_revolver", "what": "flux side 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:20", "service": "openrouter", "asset": "bullskull", "what": "flux front 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:47", "service": "openrouter", "asset": "crate", "what": "flux side 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:49", "service": "openrouter", "asset": "hand_revolver", "what": "flux back 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:21:55", "service": "openrouter", "asset": "bullskull", "what": "flux side 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:22:18", "service": "openrouter", "asset": "crate", "what": "flux back 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:22:25", "service": "openrouter", "asset": "bullskull", "what": "flux back 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:24:50", "service": "meshy", "asset": "hand_revolver", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2de-855c-7457-93d5-23763749a5da"}
+{"t": "2026-11-03 19:24:59", "service": "meshy", "asset": "bullskull", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2de-855f-75a3-8d14-008e0516db8e"}
+{"t": "2026-11-03 19:27:35", "service": "openrouter", "asset": "bullskull", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:27:38", "service": "openrouter", "asset": "hand_revolver", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:27:40", "service": "openrouter", "asset": "crate", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:27:44", "service": "meshy", "asset": "crate", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2de-85d9-76bd-8ebf-53c2974b8b3f"}
+{"t": "2026-11-03 19:32:46", "service": "meshy", "asset": "bullskull", "what": "M multi-image-to-3d", "amount": 30, "unit": "credits", "task": "01a1a2e4-66a2-75c1-a437-63994ed11b94"}
+{"t": "2026-11-03 19:32:46", "service": "meshy", "asset": "crate", "what": "M multi-image-to-3d", "amount": 30, "unit": "credits", "task": "01a1a2e4-66ae-72fd-a6e4-d93d438c0848"}
+{"t": "2026-11-03 19:33:07", "service": "meshy", "asset": "hand_revolver", "what": "M multi-image-to-3d", "amount": 35, "unit": "credits", "task": "01a1a2e4-6736-70a4-be3e-ade609921912"}
+{"t": "2026-11-03 19:37:26", "service": "openrouter", "asset": "bottle_clear", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:27", "service": "openrouter", "asset": "target_post", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:28", "service": "openrouter", "asset": "hand_left", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:28", "service": "openrouter", "asset": "rubber_chicken", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:29", "service": "openrouter", "asset": "anvil", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:31", "service": "openrouter", "asset": "bottle_green", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:31", "service": "openrouter", "asset": "bottle_brown", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:39", "service": "openrouter", "asset": "coin", "what": "flux main 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:56", "service": "openrouter", "asset": "gong_frame", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:58", "service": "openrouter", "asset": "saloon_wall", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:58", "service": "openrouter", "asset": "porch", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:37:59", "service": "openrouter", "asset": "window_frame", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:01", "service": "openrouter", "asset": "saloon_sign", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:04", "service": "openrouter", "asset": "hand_left", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:38:06", "service": "openrouter", "asset": "rubber_chicken", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:38:07", "service": "openrouter", "asset": "swing_doors", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:25", "service": "openrouter", "asset": "lantern", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:25", "service": "openrouter", "asset": "fence_section", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:27", "service": "openrouter", "asset": "cactus", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:29", "service": "openrouter", "asset": "barrel", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:35", "service": "openrouter", "asset": "rope_coil", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:35", "service": "openrouter", "asset": "wagon_wheel", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:36", "service": "openrouter", "asset": "tumbleweed", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:38:39", "service": "openrouter", "asset": "saloon_wall", "what": "flux turn 2K", "amount": 0.1, "unit": "USD"}
+{"t": "2026-11-03 19:38:54", "service": "openrouter", "asset": "rocks", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:39:00", "service": "openrouter", "asset": "cowboy_cutout", "what": "flux main 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:39:01", "service": "openrouter", "asset": "ground_decals", "what": "flux main 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:39:02", "service": "openrouter", "asset": "hud", "what": "flux main 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:39:16", "service": "openrouter", "asset": "stickers", "what": "flux main 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:41:14", "service": "openrouter", "asset": "backdrop", "what": "flux main 4K", "amount": 0.607, "unit": "USD"}
+{"t": "2026-11-03 19:43:49", "service": "openrouter", "asset": "swing_doors", "what": "flux front34 1.5K", "amount": 0.07, "unit": "USD"}
+{"t": "2026-11-03 19:44:36", "service": "meshy", "asset": "anvil", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-787b-77f2-af35-bde61934e586"}
+{"t": "2026-11-03 19:44:46", "service": "meshy", "asset": "bottle_clear", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-77e1-737f-a4ed-c4f59027cefb"}
+{"t": "2026-11-03 19:44:46", "service": "meshy", "asset": "bottle_green", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-77f5-71d1-845e-8820a42dbfd0"}
+{"t": "2026-11-03 19:44:46", "service": "meshy", "asset": "target_post", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-77fa-703c-aa09-accd601836a4"}
+{"t": "2026-11-03 19:44:46", "service": "meshy", "asset": "gong_frame", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-785c-73bd-8600-bb35b26c2cc7"}
+{"t": "2026-11-03 19:44:46", "service": "meshy", "asset": "bottle_brown", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f0-77c0-701c-8f97-3fe9389e6e12"}
+{"t": "2026-11-03 19:45:38", "service": "meshy", "asset": "saloon_sign", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f1-6a49-76f8-8deb-3a9da9ad2b64"}
+{"t": "2026-11-03 19:45:38", "service": "meshy", "asset": "window_frame", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f1-4418-735c-a970-d82d124aaad0"}
+{"t": "2026-11-03 19:45:38", "service": "meshy", "asset": "lantern", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f1-7ed9-74bc-9443-5bc09699d132"}
+{"t": "2026-11-03 19:45:49", "service": "meshy", "asset": "porch", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f1-7727-730f-ab7f-cd6f171d4abb"}
+{"t": "2026-11-03 19:45:49", "service": "meshy", "asset": "swing_doors", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f1-7cd8-770a-9c3d-d1627ed1e1c2"}
+{"t": "2026-11-03 19:46:00", "service": "meshy", "asset": "rubber_chicken", "what": "M multi-image-to-3d", "amount": 30, "unit": "credits", "task": "01a1a2f0-77ff-7063-95e0-0b87af4ddb29"}
+{"t": "2026-11-03 19:46:10", "service": "meshy", "asset": "hand_left", "what": "M multi-image-to-3d", "amount": 30, "unit": "credits", "task": "01a1a2f0-77f0-7138-b2d4-a44036482056"}
+{"t": "2026-11-03 19:46:21", "service": "meshy", "asset": "cactus", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-3cda-731c-80ec-fb7aaecaf46f"}
+{"t": "2026-11-03 19:46:21", "service": "meshy", "asset": "rope_coil", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-3f22-767c-9c3e-16ffce145b5d"}
+{"t": "2026-11-03 19:46:24", "service": "meshy", "asset": "fence_section", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-1f0a-7010-a0de-851321f8a26d"}
+{"t": "2026-11-03 19:46:34", "service": "meshy", "asset": "barrel", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-1fa8-7013-9fb0-1312e26828d8"}
+{"t": "2026-11-03 19:46:42", "service": "meshy", "asset": "wagon_wheel", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-3c5e-72ed-b536-b2343c624874"}
+{"t": "2026-11-03 19:46:53", "service": "meshy", "asset": "saloon_wall", "what": "M multi-image-to-3d", "amount": 30, "unit": "credits", "task": "01a1a2f1-6975-703e-aa07-e3113e5301b8"}
+{"t": "2026-11-03 19:46:54", "service": "meshy", "asset": "tumbleweed", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-6773-7762-baaf-7ab20a76e0b2"}
+{"t": "2026-11-03 19:46:54", "service": "meshy", "asset": "rocks", "what": "S image-to-3d", "amount": 15, "unit": "credits", "task": "01a1a2f2-6c5f-7380-9bd5-d62270e53a71"}

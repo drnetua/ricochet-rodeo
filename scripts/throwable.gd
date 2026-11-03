@@ -20,11 +20,17 @@ const HIT_SOUND := {
 	"anvil": "hit_anvil",
 	"chicken": "hit_rubber_chicken",
 }
-## Готові моделі з Blender (джерела — art/models/). Предмети без моделі збираються з примітивів.
+## Готові моделі (конвеєр tools/assets → assets/models/01). Предмети без моделі збираються з примітивів.
 const MODEL_PATHS := {
-	"crate": "res://assets/models/props/crate.glb",
-	"skull": "res://assets/models/props/bullskull.glb",
+	"crate": "res://assets/models/01/crate.glb",
+	"skull": "res://assets/models/01/bullskull.glb",
+	"anvil": "res://assets/models/01/anvil.glb",
+	"chicken": "res://assets/models/01/rubber_chicken.glb",
 }
+const COIN_FACE := "res://assets/textures/01/coin_face.png"
+const OUTLINE_SHADER := "res://assets/shaders/outline.gdshader"
+
+static var _outline: ShaderMaterial
 
 var data: ThrowableData
 ## Гравітація предмета без «зависання» (уже з урахуванням FLIGHT_SPEED).
@@ -159,7 +165,10 @@ func _build() -> void:
 	match data.id:
 		"coin":
 			Util.cyl(_visual, 0.5 * s, 0.5 * s, 0.12 * s, Vector3.ZERO, base, Vector3(90, 0, 0))
-			Util.cyl(_visual, 0.36 * s, 0.36 * s, 0.13 * s, Vector3.ZERO, Util.mat(data.color.darkened(0.25), 0.3, 1.0), Vector3(90, 0, 0))
+			if ResourceLoader.exists(COIN_FACE):
+				_coin_faces(s)
+			else:
+				Util.cyl(_visual, 0.36 * s, 0.36 * s, 0.13 * s, Vector3.ZERO, Util.mat(data.color.darkened(0.25), 0.3, 1.0), Vector3(90, 0, 0))
 			var coin_shape := CylinderShape3D.new()
 			coin_shape.radius = 0.5 * s
 			coin_shape.height = 0.12 * s
@@ -187,14 +196,23 @@ func _build() -> void:
 			crate_shape.size = Vector3.ONE * s
 			col.shape = crate_shape
 		"anvil":
-			Util.box(_visual, Vector3(1.0, 0.25, 0.45) * s, Vector3(0, 0.18 * s, 0), base)
-			Util.box(_visual, Vector3(0.4, 0.25, 0.3) * s, Vector3(0, -0.05 * s, 0), base)
-			Util.box(_visual, Vector3(0.7, 0.18, 0.45) * s, Vector3(0, -0.24 * s, 0), base)
-			Util.cyl(_visual, 0.0, 0.12 * s, 0.4 * s, Vector3(-0.68 * s, 0.18 * s, 0), base, Vector3(0, 0, 90))
-			var anvil_shape := BoxShape3D.new()
-			anvil_shape.size = Vector3(1.2, 0.6, 0.45) * s
-			col.shape = anvil_shape
+			if _add_model(s):
+				col.shape = _model_hull()
+			else:
+				Util.box(_visual, Vector3(1.0, 0.25, 0.45) * s, Vector3(0, 0.18 * s, 0), base)
+				Util.box(_visual, Vector3(0.4, 0.25, 0.3) * s, Vector3(0, -0.05 * s, 0), base)
+				Util.box(_visual, Vector3(0.7, 0.18, 0.45) * s, Vector3(0, -0.24 * s, 0), base)
+				Util.cyl(_visual, 0.0, 0.12 * s, 0.4 * s, Vector3(-0.68 * s, 0.18 * s, 0), base, Vector3(0, 0, 90))
+			if col.shape == null:
+				var anvil_shape := BoxShape3D.new()
+				anvil_shape.size = Vector3(1.2, 0.6, 0.45) * s
+				col.shape = anvil_shape
 		"chicken":
+			if _add_model(s):
+				col.shape = _model_hull()
+				add_child(col)
+				_outline_visual()
+				return
 			Util.sphere(_visual, 0.38 * s, Vector3.ZERO, base, Vector3(1.2, 1.0, 0.9))
 			Util.sphere(_visual, 0.2 * s, Vector3(0.34 * s, 0.32 * s, 0), base)
 			Util.box(_visual, Vector3(0.06, 0.16, 0.2) * s, Vector3(0.34 * s, 0.54 * s, 0), Util.mat(Color(0.9, 0.15, 0.12), 0.6))
@@ -214,6 +232,38 @@ func _build() -> void:
 			default_shape.radius = 0.5 * s
 			col.shape = default_shape
 	add_child(col)
+	_outline_visual()
+
+
+## Тонкий темний контур («inverted hull»), як на концептах.
+func _outline_visual() -> void:
+	if _outline == null:
+		_outline = ShaderMaterial.new()
+		_outline.shader = load(OUTLINE_SHADER)
+	for mi in _visual.find_children("*", "MeshInstance3D", true, false):
+		# Пласкі площини (грані монети) без контуру — інакше навколо них чорний квадрат.
+		if (mi as MeshInstance3D).mesh is QuadMesh:
+			continue
+		(mi as MeshInstance3D).material_overlay = _outline
+
+
+## Аверс і реверс монети — картинка FLUX на двох площинах поверх циліндра.
+func _coin_faces(s: float) -> void:
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = load(COIN_FACE)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	m.albedo_color = Color(1.25, 1.15, 0.95)
+	m.metallic = 0.5
+	m.roughness = 0.35
+	for side in [1.0, -1.0]:
+		var mi := MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2.ONE * s
+		mi.mesh = q
+		mi.material_override = m
+		mi.position = Vector3(0.0, 0.0, 0.061 * s * side)
+		mi.rotation_degrees = Vector3(0.0, 0.0 if side > 0.0 else 180.0, 0.0)
+		_visual.add_child(mi)
 
 
 ## Додає модель з Blender, якщо вона є для цього предмета. Модель — 1 м з центром у початку координат,

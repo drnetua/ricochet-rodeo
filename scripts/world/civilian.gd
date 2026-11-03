@@ -76,9 +76,16 @@ func _on_up() -> void:
 	_shape.set_deferred("disabled", false)
 
 
+const CUTOUT := "res://assets/textures/01/cowboy_cutout.png"
+const CUTOUT_HEIGHT := 2.5
+
+
 func _build() -> void:
 	_visual = Node3D.new()
 	add_child(_visual)
+	if ResourceLoader.exists(CUTOUT):
+		_build_cutout()
+		return
 	var card := Util.mat(Color(0.78, 0.63, 0.42), 1.0, 0.0, true)
 	var shirt := Util.mat(Color(0.3, 0.45, 0.75), 0.95, 0.0, true)
 	var skin := Util.mat(Color(0.95, 0.75, 0.6), 0.9)
@@ -101,5 +108,40 @@ func _build() -> void:
 	bs.size = Vector3(1.0, 2.6, 0.4)
 	cs.shape = bs
 	cs.position = Vector3(0.0, 1.3, 0.0)
+	add_child(cs)
+	_shape = cs
+
+
+## Картонна фігура: лицем — картинка FLUX, спиною — сірий картон, між ними товщина.
+func _build_cutout() -> void:
+	var tex := load(CUTOUT) as Texture2D
+	var px := CUTOUT_HEIGHT / float(tex.get_height())
+	for i in 3:
+		var sp := Sprite3D.new()
+		sp.texture = tex
+		sp.pixel_size = px
+		sp.centered = true
+		sp.offset = Vector2(0.0, tex.get_height() * 0.5)
+		sp.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+		sp.shaded = true
+		sp.double_sided = false
+		match i:
+			0:
+				sp.position.z = 0.012
+			1:
+				sp.modulate = Color(0.55, 0.42, 0.28)
+				sp.position.z = 0.0
+				sp.double_sided = true
+			2:
+				sp.modulate = Color(0.72, 0.6, 0.45)
+				sp.rotation_degrees.y = 180.0
+				sp.position.z = -0.012
+		_visual.add_child(sp)
+	var w := CUTOUT_HEIGHT * float(tex.get_width()) / float(tex.get_height())
+	var cs := CollisionShape3D.new()
+	var bs := BoxShape3D.new()
+	bs.size = Vector3(w * 0.75, CUTOUT_HEIGHT * 0.95, 0.3)
+	cs.shape = bs
+	cs.position = Vector3(0.0, CUTOUT_HEIGHT * 0.5, 0.0)
 	add_child(cs)
 	_shape = cs

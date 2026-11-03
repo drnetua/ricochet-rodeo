@@ -51,7 +51,18 @@ func _draw() -> void:
 
 ## Малює перехрестя в Image 64×64 зі згладжуванням: біла лінія 2 px
 ## поверх темного контуру 4 px — видно і на небі, і на піску.
+const CURSOR_TEX := "res://assets/textures/01/hud_crosshair.png"
+
+
 static func _build_cursor_image() -> Image:
+	# Приціл з концепту, якщо є; інакше — намальований кодом.
+	if ResourceLoader.exists(CURSOR_TEX):
+		var img := (load(CURSOR_TEX) as Texture2D).get_image()
+		if img.is_compressed():
+			img.decompress()
+		img.convert(Image.FORMAT_RGBA8)
+		img.resize(SIZE, SIZE, Image.INTERPOLATE_LANCZOS)
+		return img
 	var img := Image.create(SIZE, SIZE, false, Image.FORMAT_RGBA8)
 	var c := Vector2(SIZE, SIZE) * 0.5
 	for y in SIZE:
